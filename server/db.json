@@ -1,3 +1,39 @@
 {
-    "users": []
+  "fares": [
+    {
+      "title": "July Month Expense",
+      "id": 1
+    }
+  ],
+  "sharers": [
+    {
+      "name": "Jai Jain",
+      "fareId": 1,
+      "id": 1
+    },
+    {
+      "name": "Krish Jain",
+      "fareId": 1,
+      "id": 2
+    },
+    {
+      "name": "Akshat Jain",
+      "fareId": 1,
+      "id": 3
+    }
+  ],
+  "expenses": [
+    {
+      "title": "Electricity Bill",
+      "amount": 2000.00,
+      "sharerId": 1,
+      "sharedAmongst": [
+        1,
+        2,
+        3
+      ],
+      "fareId": 1,
+      "id": 1
+    }
+  ]
 }
