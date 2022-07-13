@@ -1,5 +1,9 @@
-export default interface Ifare {
+export interface Ifare {
     title: string
     date: string
     id: number
+}
+
+export interface IfareProps {
+    fare: Ifare
 }

@@ -16,15 +16,7 @@ code {
         monospace;
 }
 
-.app::before {
-    content: ' ';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.15;
+.app {
     background-image: url("./assets/vectors/exchange.svg");
     background-size: contain;
     background-repeat: no-repeat;

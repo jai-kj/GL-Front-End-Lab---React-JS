@@ -1,28 +1,30 @@
-import { useCallback, useEffect, useState } from "react"
-import axios from 'axios'
+import {useCallback, useEffect, useState} from "react"
+import axios, {AxiosRequestConfig} from 'axios'
 
-const baseURL = `http://localhost:5000`
+axios.defaults.baseURL = `http://localhost:5000`
 
-const useFetch = (url: string) => {
-    const [ loading, setLoading ] = useState(false)
-    const [ error, setError ] = useState('')
-    const [ data, setData ] = useState(null)
+const useFetch = (params: AxiosRequestConfig) => {
+    const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<any>()
+    const [data, setData] = useState<any>([])
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (): Promise<void> => {
         setLoading(true)
         try {
-            const res = await axios.get(`${baseURL}${url}`);
-            setData(res?.data)
+            const res = await axios.request(params)
+            setData(res.data)
+        } catch (error) {
+            axios?.isAxiosError(error) ? setError("Axios Error with Message: " + error.message) :
+                setError(error)
+        } finally {
             setLoading(false)
-        } catch (error: any) {
-            setLoading(false)
-            setError(error)
         }
-    }, [ url ])
+    }, [params])
 
     useEffect(() => {
         fetchData()
-    }, [ fetchData ])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return {
         loading,
