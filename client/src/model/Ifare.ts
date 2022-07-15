@@ -6,4 +6,5 @@ export interface Ifare {
 
 export interface IfareProps {
     fare: Ifare
+    handleEdit: Function
 }

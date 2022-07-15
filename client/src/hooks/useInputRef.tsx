@@ -26,9 +26,10 @@ const useInputRef = ({
         }
     }, [regex, regexCheck, defaultErrorMsg, handleError])
 
-    const onUpdate = useCallback((value = "", error = false) => {
+    const onUpdate = useCallback((value = "", error = false, errMsg = "") => {
         if (inputRef?.current) inputRef.current.value = value
         setInputError(error)
+        setErrorMsg(errMsg)
     }, [])
 
     useEffect(() => {
