@@ -9,6 +9,7 @@ body {
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
 }
 
 code {
@@ -21,4 +22,59 @@ code {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+}
+
+.modal-container {
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 30;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.modal-container-show {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    width: 46rem;
+    transition: all 0.3s ease-in-out;
+    perspective: 1000px;
+    opacity: 0;
+    visibility: hidden;
+    scroll-behavior: smooth;
+    background-color: #444444;
+    color: #ffffff;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    z-index: -1;
+}
+
+.modal-show {
+    visibility: visible;
+    transform: translate(-50%, 5rem);
+    transition: all 0.3s ease-in-out;
+    transition-delay: 0.3s;
+    opacity: 1;
+    z-index: 5;
+}
+
+@media (max-width: 786px) {
+    .modal {
+        width: calc(100% - 2rem);
+    }
 }
