@@ -1,20 +1,35 @@
-import {useCallback, useEffect, useRef, useState} from "react"
-import {IInput} from "../model/IInput"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { IInput } from "../model/IInput"
 
-const useInputRef = ({initialState = '', regex = /./, regexCheck = false}: IInput) => {
+const useInputRef = ({
+    initialState = "",
+    regex = /./,
+    regexCheck = false,
+    defaultErrorMsg = ''
+}: IInput) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [inputError, setInputError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>('')
 
-    const handleInputBlur = useCallback(
-        () =>
-            regexCheck &&
-                (!inputRef?.current?.value ||
-                    !inputRef?.current?.value?.trim() ||
-                    !inputRef?.current?.value?.match(regex))
-                ? setInputError(true)
-                : setInputError(false),
-        [regex, regexCheck]
-    )
+    const handleError = useCallback((isError = false, errMsg = '') => {
+        setInputError(isError)
+        setErrorMsg(errMsg)
+    }, [])
+
+    const handleInputBlur = useCallback(() => {
+        if (inputRef?.current?.value === "") handleError()
+        else {
+            if (inputRef?.current?.value?.trim() === "") handleError(true, defaultErrorMsg)
+            else if (regexCheck && inputRef?.current?.value?.match(regex))
+                handleError()
+            else if (regexCheck) handleError(true, defaultErrorMsg)
+        }
+    }, [regex, regexCheck, defaultErrorMsg, handleError])
+
+    const onUpdate = useCallback((value = "", error = false) => {
+        if (inputRef?.current) inputRef.current.value = value
+        setInputError(error)
+    }, [])
 
     useEffect(() => {
         if (initialState && inputRef?.current)
@@ -24,7 +39,10 @@ const useInputRef = ({initialState = '', regex = /./, regexCheck = false}: IInpu
     return {
         inputRef,
         inputError,
-        handleInputBlur
+        errorMsg,
+        handleInputBlur,
+        onUpdate,
+        handleError
     }
 }
 
