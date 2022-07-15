@@ -1,6 +1,11 @@
-import useModal from "./../../hooks/useModal"
+import { IAddFare } from "../../model/Ifare"
+
+import Button from "../layout/Button"
 import FareModal from "./../layout/modal/FareModal"
-const AddFare = () => {
+
+import useModal from "./../../hooks/useModal"
+
+const AddFare = ({ callBack }: IAddFare) => {
     const { show, setShow } = useModal()
 
     return (
@@ -9,15 +14,14 @@ const AddFare = () => {
                 modalTitle='Add Fare'
                 showModal={show}
                 setShowModal={setShow}
+                callBack={callBack}
             />
             <div className='mt-auto mb-12'>
-                <button
-                    className='float-right py-2 px-4 rounded-lg cursor-pointer bg-red-600 text-light font-medium hover:bg-red-500'
-                    type='button'
-                    onClick={() => setShow(true)}
-                >
-                    Add New Fare
-                </button>
+                <Button
+                    className='float-right text-light bg-red-600 hover:bg-red-500'
+                    callBack={() => setShow(true)}
+                    label='Add New Fare'
+                />
             </div>
         </>
     )

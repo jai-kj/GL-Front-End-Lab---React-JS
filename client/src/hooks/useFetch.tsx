@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import axios, { AxiosRequestConfig } from 'axios'
 
 axios.defaults.baseURL = `http://localhost:5000`
 
-const useFetch = (params: AxiosRequestConfig, startFetch: boolean) => {
+const useFetch = (params: AxiosRequestConfig) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<any>()
     const [data, setData] = useState<any>([])
 
     const fetchData = useCallback(async (): Promise<void> => {
-        if (!startFetch) return
         setLoading(true)
         try {
             const res = await axios.request(params)
@@ -20,17 +19,13 @@ const useFetch = (params: AxiosRequestConfig, startFetch: boolean) => {
         } finally {
             setLoading(false)
         }
-    }, [params, startFetch])
-
-    useEffect(() => {
-        fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [params])
 
     return {
         loading,
         error,
-        data
+        data,
+        sendRequest: fetchData
     }
 }
 

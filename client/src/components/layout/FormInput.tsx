@@ -21,8 +21,8 @@ const FormInput = ({
                     id={id}
                     placeholder={placeholder}
                     className={`w-full h-12 bg-dark px-3 rounded-md border-2 ${inputError
-                        ? "border-red-400 outline-none"
-                        : "border-transparent"
+                            ? "border-red-400 outline-none"
+                            : "border-transparent"
                         }`}
                     ref={inputRef}
                     onBlur={inputExit}

@@ -1,19 +1,17 @@
-import useFetch from "../../hooks/useFetch"
 import { IfareProps } from "./../../model/Ifare"
 
+import useFetch from "../../hooks/useFetch"
+
 const FateItem = ({ fare, handleEdit }: IfareProps) => {
-    const { loading, data, error } = useFetch(
-        {
-            method: "GET",
-            url: "/sharers?fareId=1",
-        },
-        true
-    )
+    const { loading, data, error } = useFetch({
+        method: "GET",
+        url: "/sharers?fareId=1",
+    })
 
     const onEdit = () => {
         if (loading || error || !data) return
         handleEdit({
-            title: fare?.title,
+            ...fare,
             participantList: data?.map((participant: any) => participant?.name),
         })
     }

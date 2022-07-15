@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react"
+import { useEffect, useRef } from "react"
 
 const useOutsideClickHandler = (callBack: Function) => {
     const ref = useRef<HTMLDivElement>(null)

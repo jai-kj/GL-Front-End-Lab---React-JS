@@ -6,4 +6,5 @@ export interface ModalProps {
 
 export interface FareModalProps extends ModalProps {
     fare?: any
+    callBack: Function
 }

@@ -8,3 +8,7 @@ export interface IfareProps {
     fare: Ifare
     handleEdit: Function
 }
+
+export interface IAddFare {
+    callBack: Function
+}

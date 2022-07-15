@@ -5,13 +5,13 @@ const useInputRef = ({
     initialState = "",
     regex = /./,
     regexCheck = false,
-    defaultErrorMsg = ''
+    defaultErrorMsg = "",
 }: IInput) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [inputError, setInputError] = useState(false)
-    const [errorMsg, setErrorMsg] = useState<string>('')
+    const [errorMsg, setErrorMsg] = useState<string>("")
 
-    const handleError = useCallback((isError = false, errMsg = '') => {
+    const handleError = useCallback((isError = false, errMsg = "") => {
         setInputError(isError)
         setErrorMsg(errMsg)
     }, [])
@@ -19,7 +19,8 @@ const useInputRef = ({
     const handleInputBlur = useCallback(() => {
         if (inputRef?.current?.value === "") handleError()
         else {
-            if (inputRef?.current?.value?.trim() === "") handleError(true, defaultErrorMsg)
+            if (inputRef?.current?.value?.trim() === "")
+                handleError(true, defaultErrorMsg)
             else if (regexCheck && inputRef?.current?.value?.match(regex))
                 handleError()
             else if (regexCheck) handleError(true, defaultErrorMsg)
@@ -43,7 +44,7 @@ const useInputRef = ({
         errorMsg,
         handleInputBlur,
         onUpdate,
-        handleError
+        handleError,
     }
 }
 

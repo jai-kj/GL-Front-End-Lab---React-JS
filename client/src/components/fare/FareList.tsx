@@ -1,18 +1,18 @@
-import useFetch from "../../hooks/useFetch"
-import FareItem from "./FateItem"
+import { useCallback, useEffect, useState } from "react"
 import { Ifare } from "./../../model/Ifare"
+
+import FareItem from "./FateItem"
+import AddFare from "./AddFare"
 import FareModal from "../layout/modal/FareModal"
+
+import useFetch from "../../hooks/useFetch"
 import useModal from "../../hooks/useModal"
-import { useCallback, useState } from "react"
 
 const FareList = () => {
-    const { loading, data, error } = useFetch(
-        {
-            method: "GET",
-            url: "/fares",
-        },
-        true
-    )
+    const { loading, data, error, sendRequest } = useFetch({
+        method: "GET",
+        url: "/fares?_sort=id&_order=desc",
+    })
 
     const [fare, setFare] = useState({
         title: "",
@@ -29,6 +29,11 @@ const FareList = () => {
         [setShow]
     )
 
+    useEffect(() => {
+        sendRequest()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
         <>
             <FareModal
@@ -36,6 +41,7 @@ const FareList = () => {
                 showModal={show}
                 setShowModal={setShow}
                 fare={fare}
+                callBack={sendRequest}
             />
             <table className='my-12 text-light table-auto w-full max-h-96'>
                 <thead className='text-xl border-b-2 border-light'>
@@ -70,6 +76,7 @@ const FareList = () => {
                         ))}
                 </tbody>
             </table>
+            <AddFare callBack={sendRequest} />
         </>
     )
 }

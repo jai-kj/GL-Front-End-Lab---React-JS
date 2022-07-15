@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
 import { FareModalProps } from "../../../model/IModal"
-import useInputRef from "../../../hooks/useInputRef"
+
 import FormInput from "../FormInput"
+import Button from "../Button"
+
+import useInputRef from "../../../hooks/useInputRef"
 
 const maxLimit = 20
 
@@ -10,6 +13,7 @@ const FareModal = ({
     setShowModal,
     modalTitle,
     fare,
+    callBack,
 }: FareModalProps) => {
     const {
         inputRef: titleInputRef,
@@ -68,7 +72,6 @@ const FareModal = ({
     }
 
     const handleFormReset = () => {
-        if (fare) return
         // Reset all states
         titleInputUpdate()
         participantInputUpdate()
@@ -92,7 +95,7 @@ const FareModal = ({
                     <h3 className='text-xl font-medium justify-self-center text-center pb-6 border-b-2 border-light'>
                         {modalTitle}
                         <span
-                            className='float-right px-1 cursor-pointer text-red-300 font-bold text-2xl hover:scale-110'
+                            className='float-right px-1 cursor-pointer text-red-400 font-bold text-2xl hover:scale-110'
                             onClick={() => setShowModal(false)}
                         >
                             &times;
@@ -121,18 +124,16 @@ const FareModal = ({
                                 inputErrorMsg={participantErrorMsg}
                             />
                             <div className='flex space-x-3 items-end mb-12 md:mb-8'>
-                                <button
-                                    type='button'
-                                    className='bg-blue-500 rounded-md px-4 h-12 hover:bg-blue-400'
-                                    onClick={handleParticipantAdd}
-                                >
-                                    Add
-                                </button>
+                                <Button
+                                    className='bg-blue-500 hover:bg-blue-400'
+                                    callBack={handleParticipantAdd}
+                                    label='Add'
+                                />
                             </div>
                         </div>
                     </form>
                     <div className='flex flex-col'>
-                        <div className='flex justify-between text-stone-300 text-xs'>
+                        <div className='flex justify-between text-stone-400 text-xs'>
                             <label className='p-2'>Total Participants</label>
                             <label className='p-2'>
                                 {participantList?.length} / {maxLimit}
@@ -164,20 +165,26 @@ const FareModal = ({
                         </div>
                     </div>
                     <div className='flex float-right mt-6 space-x-4'>
-                        <button
-                            type='button'
-                            className={`bg-transparent w-24 h-12 border rounded-lg font-medium hover:text-dark hover:bg-light ${fare ? "cursor-not-allowed" : ""
-                                }`}
-                            onClick={handleFormReset}
-                        >
-                            Clear
-                        </button>
-                        <button
-                            type='button'
-                            className='w-24 h-12 rounded-lg font-medium bg-green-500 hover:bg-green-400'
-                        >
-                            Save
-                        </button>
+                        {!fare ? (
+                            <Button
+                                className='w-24 bg-transparent border hover:text-dark hover:bg-light'
+                                callBack={handleFormReset}
+                                label='Clear'
+                            />
+                        ) : (
+                            <Button
+                                className='w-24 bg-transparent border border-red-400 text-red-400 hover:text-light hover:bg-red-400'
+                                callBack={() =>
+                                    console.log("Delete Fare" + fare?.id)
+                                }
+                                label='Delete'
+                            />
+                        )}
+                        <Button
+                            className='w-24 bg-green-500 hover:bg-green-400'
+                            callBack={() => console.log("Save Form")}
+                            label='Save'
+                        />
                     </div>
                 </div>
             </div>

@@ -4,6 +4,11 @@
       "title": "July Month Expense",
       "date": "Wed Jul 13 2022",
       "id": 1
+    },
+    {
+      "title": "July Expenses",
+      "date": "Sat Jul 16 2022",
+      "id": 2
     }
   ],
   "sharers": [
@@ -26,7 +31,7 @@
   "expenses": [
     {
       "title": "Electricity Bill",
-      "amount": 2000.00,
+      "amount": 2000,
       "sharerId": 1,
       "sharedAmongst": [
         1,

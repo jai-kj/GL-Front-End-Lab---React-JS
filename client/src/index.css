@@ -39,7 +39,6 @@ code {
     transition: all 0.3s ease-in-out;
 }
 
-
 .modal-container-show {
     opacity: 1;
     visibility: visible;
