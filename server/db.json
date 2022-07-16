@@ -6,7 +6,7 @@
       "id": 1
     },
     {
-      "title": "July Expenses",
+      "title": "Juhu Trip",
       "date": "Sat Jul 16 2022",
       "id": 2
     }
@@ -26,6 +26,36 @@
       "name": "Akshat Jain",
       "fareId": 1,
       "id": 3
+    },
+    {
+      "name": "Jai",
+      "fareId": 2,
+      "id": 4
+    },
+    {
+      "name": "Krish",
+      "fareId": 2,
+      "id": 5
+    },
+    {
+      "name": "Akshat",
+      "fareId": 2,
+      "id": 6
+    },
+    {
+      "name": "Preet",
+      "fareId": 2,
+      "id": 7
+    },
+    {
+      "name": "Yoshika",
+      "fareId": 2,
+      "id": 8
+    },
+    {
+      "name": "Mahi",
+      "fareId": 2,
+      "id": 9
     }
   ],
   "expenses": [

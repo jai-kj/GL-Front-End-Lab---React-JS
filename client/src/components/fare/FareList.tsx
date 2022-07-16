@@ -11,7 +11,11 @@ import useModal from "../../hooks/useModal"
 const FareList = () => {
     const { loading, data, error, sendRequest } = useFetch({
         method: "GET",
-        url: "/fares?_sort=id&_order=desc",
+        url: "/fares",
+        params: {
+            _sort: "id",
+            _order: "desc",
+        },
     })
 
     const [fare, setFare] = useState({
@@ -41,7 +45,7 @@ const FareList = () => {
                 showModal={show}
                 setShowModal={setShow}
                 fare={fare}
-                callBack={sendRequest}
+                callBack={(val: any) => console.log(val)}
             />
             <table className='my-12 text-light table-auto w-full max-h-96'>
                 <thead className='text-xl border-b-2 border-light'>

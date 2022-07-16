@@ -4,6 +4,8 @@ node_modules
 # misc
 *.pdf
 
+server/db.json
+
 .DS_Store
 .env
 .env.local

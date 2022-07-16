@@ -45,7 +45,12 @@ const FareModal = ({
 
     const [participantList, setParticipantList] = useState<Array<string>>([])
 
-    useEffect(() => { }, [])
+    useEffect(() => {
+        if (!fare) return handleFormReset()
+        titleInputUpdate(fare?.title)
+        setParticipantList(fare?.participantList)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fare])
 
     const handleParticipantRemove = (id: number) => {
         // 1. Remove sharer from server
@@ -78,12 +83,28 @@ const FareModal = ({
         setParticipantList([])
     }
 
-    useEffect(() => {
-        if (!fare) return handleFormReset()
-        titleInputUpdate(fare?.title)
-        setParticipantList(fare?.participantList)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fare])
+    const handleFormSubmit = () => {
+        const titleName = titleInputRef?.current?.value
+
+        if (
+            titleError ||
+            !titleName ||
+            participantError ||
+            !participantList.length
+        )
+            return console.log("Failed to Send")
+
+        callBack(
+            {
+                title: titleName,
+                date: new Date().toDateString(),
+            },
+            participantList
+        )
+
+        handleFormReset()
+        setShowModal(false)
+    }
 
     return (
         <div
@@ -182,7 +203,7 @@ const FareModal = ({
                         )}
                         <Button
                             className='w-24 bg-green-500 hover:bg-green-400'
-                            callBack={() => console.log("Save Form")}
+                            callBack={handleFormSubmit}
                             label='Save'
                         />
                     </div>

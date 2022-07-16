@@ -1,14 +1,23 @@
 import { IfareProps } from "./../../model/Ifare"
 
 import useFetch from "../../hooks/useFetch"
+import { useEffect } from "react"
 
 const FateItem = ({ fare, handleEdit }: IfareProps) => {
-    const { loading, data, error } = useFetch({
+    const { loading, data, error, sendRequest } = useFetch({
         method: "GET",
-        url: "/sharers?fareId=1",
+        url: "/sharers",
+        params: {
+            fareId: fare?.id,
+        },
     })
 
-    const onEdit = () => {
+    useEffect(() => {
+        sendRequest()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const onEdit = async () => {
         if (loading || error || !data) return
         handleEdit({
             ...fare,
@@ -17,7 +26,7 @@ const FateItem = ({ fare, handleEdit }: IfareProps) => {
     }
 
     return (
-        <tr>
+        <tr className='odd:bg-zinc-700'>
             <td className='p-4'>{fare?.title}</td>
             <td className='text-right p-4'>{fare?.date}</td>
             <td className='text-right p-4'>

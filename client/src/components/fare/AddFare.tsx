@@ -4,9 +4,41 @@ import Button from "../layout/Button"
 import FareModal from "./../layout/modal/FareModal"
 
 import useModal from "./../../hooks/useModal"
+import useFetch from "./../../hooks/useFetch"
 
 const AddFare = ({ callBack }: IAddFare) => {
     const { show, setShow } = useModal()
+    const { sendRequest: addFareRequest } = useFetch({
+        method: "POST",
+        url: "/fares",
+        params: {},
+        headers: { "Content-Type": "application/json" },
+    })
+
+    const { sendRequest: addSharerRequest } = useFetch({
+        method: "POST",
+        url: "/sharers",
+        params: {},
+        headers: { "Content-Type": "application/json" },
+    })
+
+    const handleFormSubmit = async (formData: {}, sharerData: []) => {
+        try {
+            const data = await addFareRequest(formData)
+            if (Array.isArray(sharerData) && data?.id)
+                sharerData.forEach(
+                    async sharer =>
+                        await addSharerRequest({
+                            name: sharer,
+                            fareId: data?.id,
+                        })
+                )
+
+            callBack()
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     return (
         <>
@@ -14,7 +46,9 @@ const AddFare = ({ callBack }: IAddFare) => {
                 modalTitle='Add Fare'
                 showModal={show}
                 setShowModal={setShow}
-                callBack={callBack}
+                callBack={(fareData: {}, sharerData: []) =>
+                    handleFormSubmit(fareData, sharerData)
+                }
             />
             <div className='mt-auto mb-12'>
                 <Button
