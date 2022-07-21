@@ -1,56 +1,71 @@
 {
   "fares": [
     {
-      "title": "July Month Expense",
-      "date": "Wed Jul 13 2022",
-      "id": 1
-    },
-    {
-      "title": "Juhu Trip",
-      "date": "Sat Jul 16 2022",
-      "id": 2
-    },
-    {
-      "id": 3,
-      "title": "Jai's Day Out",
+      "id": 1,
+      "title": "Juhu School Friend Trip",
       "date": "Thu Jul 21 2022"
     },
     {
-      "id": 4,
-      "title": "Krish's Day Out",
+      "id": 2,
+      "title": "Harihareshwar",
       "date": "Thu Jul 21 2022"
     }
   ],
   "sharers": [
     {
+      "id": 1,
       "name": "Jai",
-      "fareId": 2,
-      "id": 4
+      "fareId": 1
     },
     {
-      "name": "Krish",
-      "fareId": 2,
-      "id": 5
+      "id": 2,
+      "name": "Akanksha",
+      "fareId": 1
     },
     {
-      "name": "Akshat",
-      "fareId": 2,
-      "id": 6
+      "id": 3,
+      "name": "Pragnya",
+      "fareId": 1
     },
     {
-      "name": "Preet",
-      "fareId": 2,
-      "id": 7
+      "id": 4,
+      "name": "Jai",
+      "fareId": 2
     },
     {
-      "name": "Yoshika",
-      "fareId": 2,
-      "id": 8
+      "id": 5,
+      "name": "Meet",
+      "fareId": 2
     },
     {
-      "name": "Mahi",
-      "fareId": 2,
-      "id": 9
+      "id": 6,
+      "name": "Udit",
+      "fareId": 2
+    },
+    {
+      "id": 7,
+      "name": "Ritik",
+      "fareId": 2
+    },
+    {
+      "id": 8,
+      "name": "Jaineel",
+      "fareId": 2
+    },
+    {
+      "id": 9,
+      "name": "Pradnayesh",
+      "fareId": 2
+    },
+    {
+      "id": 10,
+      "name": "Pruthil",
+      "fareId": 2
+    },
+    {
+      "id": 11,
+      "name": "Jeet",
+      "fareId": 2
     }
   ],
   "expenses": []

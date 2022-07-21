@@ -31,7 +31,8 @@ const ParticipantList = () => {
     } = useUIState()
     const { addFareParticipant, removeFareParticipant } = useUIDispatch()
 
-    const handleParticipantAdd = () => {
+    const handleParticipantAdd = (e: React.SyntheticEvent) => {
+        e.preventDefault()
         if (loading || !fareId) return
 
         const name = participantNameInputRef?.current?.value
@@ -58,7 +59,7 @@ const ParticipantList = () => {
 
     return (
         <div className='flex flex-col mt-6 sm:mt-0'>
-            <div className='flex space-x-2'>
+            <form className='flex space-x-2' onSubmit={handleParticipantAdd}>
                 <FormInput
                     id='participant-name'
                     label='* Participant Name'
@@ -71,12 +72,12 @@ const ParticipantList = () => {
                 <div className='flex space-x-3 items-end mb-8'>
                     <Button
                         className='bg-blue-500 hover:bg-blue-400'
-                        callBack={handleParticipantAdd}
+                        type="submit"
                         disabled={loading}
                         label='Add'
                     />
                 </div>
-            </div>
+            </form>
             <div className='flex flex-col'>
                 <div className='flex justify-between text-stone-400 text-xs'>
                     <label className='p-2'>Total Participants</label>
