@@ -1,27 +1,27 @@
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useMemo,
-    useReducer,
-} from "react"
-import { ActionTypes, reducer } from "./reducer"
-import axios, { AxiosRequestConfig } from "axios"
+import { createContext, useContext, useMemo, useReducer } from "react"
+import { reducer } from "./reducer"
 
-const defaultStates = {
-    loading: true,
-    data: [],
+import { Ifare } from "./../model/Ifare"
+
+import FareActions from "./actions/FareActions"
+import ParticipantActions from "./actions/ParticipantActions"
+
+export const defaultState = (isObject: boolean, objectProps?: any) => ({
+    loading: false,
+    data: !isObject ? [] : { ...objectProps },
     error: null,
+})
+
+export const fareType: Ifare = {
+    id: 0,
+    title: null,
+    date: null,
 }
 
 const initialState = {
-    fareList: { ...defaultStates },
-    fare: {
-        id: null,
-        title: null,
-        date: null
-    },
-    participants: { ...defaultStates },
+    fareList: { ...defaultState(false) },
+    fare: { ...defaultState(true, fareType) },
+    participants: { ...defaultState(false) },
 }
 
 const StateContext = createContext(initialState)
@@ -47,83 +47,40 @@ export const useUIDispatch = () => {
 
     if (!dispatch) throw new Error("Use dispatch within a Dispatch Provider")
 
-    const handleLoading = useCallback(
-        (type: string, payload: any, status: boolean) =>
-            dispatch({ type, payload: { ...payload, loading: status } }),
-        [dispatch]
-    )
+    const { fetchFares, setFare, resetFare, addFare, updateFare, deleteFare } =
+        FareActions(dispatch)
 
-    const handleError = useCallback(
-        (type: string, payload: any, error: any) =>
-            dispatch({ type, payload: { ...payload, error } }),
-        [dispatch]
-    )
-
-    const handleRequest = useCallback(
-        async (type: string, params: AxiosRequestConfig) => {
-            let result = { ...defaultStates }
-            handleLoading(type, result, true)
-            try {
-                const response = await axios.request(params)
-                result.data = response?.data
-                dispatch({ type, payload: result })
-            } catch (err) {
-                handleError(
-                    type,
-                    result,
-                    axios?.isAxiosError(err)
-                        ? `Axios Error with Message: ${err?.message}`
-                        : err
-                )
-            } finally {
-                handleLoading(type, result, false)
-            }
-        },
-        [dispatch, handleLoading, handleError]
-    )
-
-    const fetchFares = useCallback(
-        () =>
-            handleRequest(ActionTypes.GET_FARES, {
-                method: "GET",
-                url: "/fares",
-                params: {
-                    _sort: "id",
-                    _order: "desc",
-                },
-            }),
-        [handleRequest]
-    )
-
-    const fetchFareParticipants = useCallback(
-        (fareId: number) =>
-            handleRequest(ActionTypes.GET_FARE_PARTICPANTS, {
-                method: "GET",
-                url: "/sharers",
-                params: {
-                    fareId,
-                },
-            }),
-        [handleRequest]
-    )
-
-    const setFare = useCallback(
-        (fare: any) => dispatch({ type: ActionTypes.SET_FARE, payload: fare }),
-        [dispatch]
-    )
-
-    const resetFare = useCallback(
-        () => dispatch({ type: ActionTypes.RESET_FARE }),
-        [dispatch]
-    )
+    const {
+        fetchFareParticipants,
+        resetFareParticipants,
+        addFareParticipant,
+        removeFareParticipant,
+    } = ParticipantActions(dispatch)
 
     return useMemo(
         () => ({
             fetchFares,
-            fetchFareParticipants,
             setFare,
             resetFare,
+            addFare,
+            updateFare,
+            deleteFare,
+            fetchFareParticipants,
+            resetFareParticipants,
+            addFareParticipant,
+            removeFareParticipant,
         }),
-        [fetchFares, fetchFareParticipants, setFare, resetFare]
+        [
+            fetchFares,
+            setFare,
+            resetFare,
+            addFare,
+            updateFare,
+            deleteFare,
+            fetchFareParticipants,
+            resetFareParticipants,
+            addFareParticipant,
+            removeFareParticipant,
+        ]
     )
 }

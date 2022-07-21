@@ -3,4 +3,5 @@ export interface IButton {
     className?: string
     callBack: React.MouseEventHandler<HTMLButtonElement>
     label?: string
+    disabled?: boolean
 }

@@ -65,7 +65,7 @@ code {
 
 .modal-show {
     visibility: visible;
-    transform: translate(-50%, 5rem);
+    transform: translate(-50%, 3rem);
     transition: all 0.3s ease-in-out;
     transition-delay: 0.3s;
     opacity: 1;

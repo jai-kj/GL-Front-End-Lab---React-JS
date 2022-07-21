@@ -1,18 +1,14 @@
 export interface Ifare {
-    title: string
-    date: string
+    title: string | null
+    date: string | null
     id: number
 }
 
 export interface IfareProps {
     fare: Ifare
-}
-
-export interface IAddFare {
     callBack: Function
 }
 
-export interface IFareForm {
-    fare: Ifare
+export interface IAddFare {
     callBack: Function
 }

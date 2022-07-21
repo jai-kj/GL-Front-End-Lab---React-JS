@@ -21,13 +21,13 @@ const FormInput = ({
                     id={id}
                     placeholder={placeholder}
                     className={`w-full h-12 bg-dark px-3 rounded-md border-2 ${inputError
-                            ? "border-red-400 outline-none"
-                            : "border-transparent"
+                        ? "border-red-400 outline-none"
+                        : "border-transparent"
                         }`}
                     ref={inputRef}
                     onBlur={inputExit}
                 />
-                <p className='text-red-300 h-12 md:h-8 px-2 text-xs py-1'>
+                <p className='text-red-300 h-8 px-2 text-xxs sm:text-xs pt-1'>
                     {inputErrorMsg}
                 </p>
             </div>

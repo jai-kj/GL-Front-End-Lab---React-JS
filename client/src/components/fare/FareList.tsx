@@ -10,9 +10,10 @@ import FareModal from "../layout/modal/FareModal"
 
 const FareList = () => {
     const { show, setShow } = useModal()
-    const { fetchFares, resetFare } = useUIDispatch()
-    const { fareList: { loading, error, data } } = useUIState()
-
+    const { fetchFares, resetFare, resetFareParticipants } = useUIDispatch()
+    const {
+        fareList: { loading, error, data },
+    } = useUIState()
 
     useEffect(() => {
         fetchFares()
@@ -20,13 +21,21 @@ const FareList = () => {
 
     return (
         <>
-            <FareModal showModal={show} setShowModal={setShow} />
+            <FareModal
+                showModal={show}
+                setShowModal={(val: boolean) => {
+                    setShow(val)
+                    resetFareParticipants()
+                }}
+            />
             <table className='my-12 text-light table-auto w-full max-h-96'>
                 <thead className='text-xl border-b-2 border-light'>
                     <tr>
                         <th className='w-7/12 text-left p-4'>Name</th>
-                        <th className='w-3/12 text-right p-4'>Date</th>
-                        <th className='w-2/12' />
+                        <th className='hidden md:table-cell w-4/12 text-right p-4'>
+                            Date
+                        </th>
+                        <th className='w-1/12' />
                     </tr>
                 </thead>
                 <tbody>
@@ -49,14 +58,17 @@ const FareList = () => {
                             <FareItem
                                 fare={row}
                                 key={row?.id}
+                                callBack={setShow}
                             />
                         ))}
                 </tbody>
             </table>
-            <AddFare callBack={(val: boolean) => {
-                resetFare()
-                setShow(val)
-            }} />
+            <AddFare
+                callBack={(val: boolean) => {
+                    resetFare()
+                    setShow(val)
+                }}
+            />
         </>
     )
 }

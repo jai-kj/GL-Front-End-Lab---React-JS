@@ -1,13 +1,14 @@
-// import { useState } from "react"
+import { useEffect } from "react"
+import useInputRef from "../../../hooks/useInputRef"
+
 import { ModalProps } from "../../../model/IModal"
+import { Ifare } from "./../../../model/Ifare"
+
+import { useUIDispatch, useUIState } from "../../../context/context"
+import ParticipantList from "../../fare/ParticipantList"
 
 import FormInput from "../FormInput"
 import Button from "../Button"
-
-import useInputRef from "../../../hooks/useInputRef"
-import { useUIState } from "../../../context/context"
-
-// const maxLimit = 20
 
 const FareModal = ({ showModal, setShowModal }: ModalProps) => {
     const {
@@ -24,76 +25,33 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
     })
 
     const {
-        fare: { title },
+        fare: {
+            data: { id, title, date },
+            loading,
+        },
     } = useUIState()
+    const { addFare, updateFare } = useUIDispatch()
 
-    // const {
-    //     inputRef: participantNameInputRef,
-    //     inputError: participantError,
-    //     errorMsg: participantErrorMsg,
-    //     handleInputBlur: handleParticpantNameExit,
-    //     onUpdate: participantInputUpdate,
-    //     handleError: setParticipantError,
-    // } = useInputRef({
-    //     regex: /^[a-zA-Z][a-zA-Z ]*$/,
-    //     regexCheck: true,
-    //     defaultErrorMsg:
-    //         "Name must not be empty and contain only alphabets & spaces!",
-    // })
+    useEffect(() => {
+        id ? titleInputUpdate(title ?? "") : handleFormReset()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id])
 
-    // const [participantList, setParticipantList] = useState<Array<string>>([])
-
-    // const handleParticipantRemove = (id: number) => {
-    //     const prevState = [...participantList]
-    //     prevState.splice(id, 1)
-    //     setParticipantList(prevState)
-    // }
-
-    // const handleParticipantAdd = () => {
-    //     const participantName = participantNameInputRef?.current?.value
-
-    //     if (participantError || !participantName)
-    //         return console.log("Invalid Input")
-
-    //     if (participantList?.length !== maxLimit) {
-    //         setParticipantList((prevState: Array<string>) => [
-    //             ...prevState,
-    //             participantName,
-    //         ])
-    //         return participantInputUpdate()
-    //     }
-    //     return setParticipantError(true, "Participant List Full!")
-    // }
-
-    const handleFormReset = () => {
-        // Reset all states
-        titleInputUpdate()
-        // participantInputUpdate()
-        // setParticipantList([])
-    }
+    const handleFormReset = () => titleInputUpdate()
 
     const handleFormSubmit = () => {
         const titleName = titleInputRef?.current?.value
+        if (titleError || !titleName) return console.log("Failed to Send")
 
-        if (
-            titleError ||
-            !titleName
-            // ||
-            // participantError
-            // ||
-            // !participantList.length
-        )
-            return console.log("Failed to Send")
-
-        const fareData = {
+        const fareData: Ifare = {
+            id: !id ? null : id,
             title: titleName,
-            date: new Date().toDateString(),
+            date: !id ? new Date().toDateString() : date,
         }
 
-        // callBack(fareData, participantList)
+        if (!id) return addFare(fareData)
 
-        handleFormReset()
-        setShowModal(false)
+        return updateFare(fareData, id)
     }
 
     return (
@@ -113,8 +71,8 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                         </span>
                     </h3>
                 </div>
-                <div className='modal-body my-2'>
-                    <form>
+                <div className='modal-body my-2 flex flex-col'>
+                    <form className='flex flex-col items-end space-x-0 sm:space-x-3 sm:flex-row'>
                         <FormInput
                             id='fare-title'
                             label='* Title'
@@ -124,77 +82,13 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                             inputError={titleError}
                             inputErrorMsg={titleErrorMsg}
                         />
-                    </form>
-                    {/* <div className='flex space-x-2'> */}
-                    {/* <FormInput
-                                id='participant-name'
-                                label='* Participant Name'
-                                placeholder='Enter Participant Name'
-                                inputRef={participantNameInputRef}
-                                inputExit={handleParticpantNameExit}
-                                inputError={participantError}
-                                inputErrorMsg={participantErrorMsg}
-                            /> */}
-                    {/* <div className='flex space-x-3 items-end mb-12 md:mb-8'>
-                                <Button
-                                    className='bg-blue-500 hover:bg-blue-400'
-                                    callBack={handleParticipantAdd}
-                                    label='Add'
-                                />
-                            </div> */}
-                    {/* </div> */}
-                    {/* <div className='flex flex-col'>
-                        <div className='flex justify-between text-stone-400 text-xs'>
-                            <label className='p-2'>Total Participants</label>
-                            <label className='p-2'>
-                                {participantList?.length} / {maxLimit}
-                            </label>
-                        </div>
-                        <div className='flex flex-wrap w-full max-h-40 bg-dark rounded-lg p-3 gap-3 overflow-y-auto'>
-                            {!participantList?.length ? (
-                                <div className='px-2 h-8 flex justify-center items-center text-stone-400'>
-                                    No Participants Added Yet!
-                                </div>
-                            ) : (
-                                participantList?.map((participant, i) => (
-                                    <div
-                                        key={i}
-                                        className='pl-2 pr-3 h-8 flex justify-center items-center bg-violet-600 rounded-md font-semibold'
-                                    >
-                                        <span
-                                            className='mr-3 cursor-pointer hover:scale-125'
-                                            onClick={() =>
-                                                handleParticipantRemove(i)
-                                            }
-                                        >
-                                            &times;
-                                        </span>
-                                        {participant}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </div>
-                    <div className='flex float-right mt-6 space-x-4'>
                         <Button
-                            className='w-24 bg-transparent border hover:text-dark hover:bg-light'
-                            callBack={handleFormReset}
-                            label='Clear'
-                        />
-                        {/* // ) : (
-                        //     <Button
-                        //         className='w-24 bg-transparent border border-red-400 text-red-400 hover:text-light hover:bg-red-400'
-                        //         callBack={() => {}
-                        //         }
-                        //         label='Delete'
-                        //     />
-                        // )} */}
-                    {/* <Button
-                            className='w-24 bg-green-500 hover:bg-green-400'
+                            className='w-full sm:w-24 bg-green-500 mb-0 hover:bg-green-400 sm:mb-8'
                             callBack={handleFormSubmit}
-                            label='Save'
-                        /> */}
-                    {/* </div> */}
+                            label={loading ? "..." : id ? "Update" : "Save"}
+                        />
+                    </form>
+                    <ParticipantList />
                 </div>
             </div>
         </div>
