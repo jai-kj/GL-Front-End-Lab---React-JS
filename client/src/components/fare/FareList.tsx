@@ -1,52 +1,26 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useUIDispatch, useUIState } from "../../context/context"
 import { Ifare } from "./../../model/Ifare"
 
-import FareItem from "./FateItem"
 import AddFare from "./AddFare"
+import FareItem from "./FateItem"
+
+import useModal from "../../hooks/useModal"
 import FareModal from "../layout/modal/FareModal"
 
-import useFetch from "../../hooks/useFetch"
-import useModal from "../../hooks/useModal"
-
 const FareList = () => {
-    const { loading, data, error, sendRequest } = useFetch({
-        method: "GET",
-        url: "/fares",
-        params: {
-            _sort: "id",
-            _order: "desc",
-        },
-    })
-
-    const [fare, setFare] = useState({
-        title: "",
-        participantList: [],
-    })
-
     const { show, setShow } = useModal()
+    const { fetchFares, resetFare } = useUIDispatch()
+    const { fareList: { loading, error, data } } = useUIState()
 
-    const handleEdit = useCallback(
-        (data: any) => {
-            setShow(true)
-            setFare(data)
-        },
-        [setShow]
-    )
 
     useEffect(() => {
-        sendRequest()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        fetchFares()
+    }, [fetchFares])
 
     return (
         <>
-            <FareModal
-                modalTitle='Edit Fare'
-                showModal={show}
-                setShowModal={setShow}
-                fare={fare}
-                callBack={(val: any) => console.log(val)}
-            />
+            <FareModal showModal={show} setShowModal={setShow} />
             <table className='my-12 text-light table-auto w-full max-h-96'>
                 <thead className='text-xl border-b-2 border-light'>
                     <tr>
@@ -75,12 +49,14 @@ const FareList = () => {
                             <FareItem
                                 fare={row}
                                 key={row?.id}
-                                handleEdit={handleEdit}
                             />
                         ))}
                 </tbody>
             </table>
-            <AddFare callBack={sendRequest} />
+            <AddFare callBack={(val: boolean) => {
+                resetFare()
+                setShow(val)
+            }} />
         </>
     )
 }

@@ -9,12 +9,17 @@
       "title": "Juhu Trip",
       "date": "Sat Jul 16 2022",
       "id": 2
+    },
+    {
+      "title": "July Expenses",
+      "date": "Sat Jul 16 2022",
+      "id": 3
     }
   ],
   "sharers": [
     {
       "name": "Jai Jain",
-      "fareId": 1,
+      "fareId": 2,
       "id": 1
     },
     {

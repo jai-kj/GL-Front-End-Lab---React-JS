@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react"
-import { FareModalProps } from "../../../model/IModal"
+// import { useState } from "react"
+import { ModalProps } from "../../../model/IModal"
 
 import FormInput from "../FormInput"
 import Button from "../Button"
 
 import useInputRef from "../../../hooks/useInputRef"
+import { useUIState } from "../../../context/context"
 
-const maxLimit = 20
+// const maxLimit = 20
 
-const FareModal = ({
-    showModal,
-    setShowModal,
-    modalTitle,
-    fare,
-    callBack,
-}: FareModalProps) => {
+const FareModal = ({ showModal, setShowModal }: ModalProps) => {
     const {
         inputRef: titleInputRef,
         inputError: titleError,
@@ -22,7 +17,6 @@ const FareModal = ({
         handleInputBlur: handleTitleExit,
         onUpdate: titleInputUpdate,
     } = useInputRef({
-        initialState: fare?.title,
         regex: /^[a-zA-Z][a-zA-Z0-9.,'" -]*$/,
         regexCheck: true,
         defaultErrorMsg:
@@ -30,57 +24,52 @@ const FareModal = ({
     })
 
     const {
-        inputRef: participantNameInputRef,
-        inputError: participantError,
-        errorMsg: participantErrorMsg,
-        handleInputBlur: handleParticpantNameExit,
-        onUpdate: participantInputUpdate,
-        handleError: setParticipantError,
-    } = useInputRef({
-        regex: /^[a-zA-Z][a-zA-Z ]*$/,
-        regexCheck: true,
-        defaultErrorMsg:
-            "Name must not be empty and contain only alphabets & spaces!",
-    })
+        fare: { title },
+    } = useUIState()
 
-    const [participantList, setParticipantList] = useState<Array<string>>([])
+    // const {
+    //     inputRef: participantNameInputRef,
+    //     inputError: participantError,
+    //     errorMsg: participantErrorMsg,
+    //     handleInputBlur: handleParticpantNameExit,
+    //     onUpdate: participantInputUpdate,
+    //     handleError: setParticipantError,
+    // } = useInputRef({
+    //     regex: /^[a-zA-Z][a-zA-Z ]*$/,
+    //     regexCheck: true,
+    //     defaultErrorMsg:
+    //         "Name must not be empty and contain only alphabets & spaces!",
+    // })
 
-    useEffect(() => {
-        if (!fare) return handleFormReset()
-        titleInputUpdate(fare?.title)
-        setParticipantList(fare?.participantList)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fare])
+    // const [participantList, setParticipantList] = useState<Array<string>>([])
 
-    const handleParticipantRemove = (id: number) => {
-        // 1. Remove sharer from server
+    // const handleParticipantRemove = (id: number) => {
+    //     const prevState = [...participantList]
+    //     prevState.splice(id, 1)
+    //     setParticipantList(prevState)
+    // }
 
-        // 2. If step 1 is success then remove from localState
-        const prevState = [...participantList]
-        prevState.splice(id, 1)
-        setParticipantList(prevState)
-    }
+    // const handleParticipantAdd = () => {
+    //     const participantName = participantNameInputRef?.current?.value
 
-    const handleParticipantAdd = () => {
-        const participantName = participantNameInputRef?.current?.value
+    //     if (participantError || !participantName)
+    //         return console.log("Invalid Input")
 
-        if (participantError || !participantName)
-            return console.log("Invalid Input")
-
-        if (participantList?.length !== maxLimit) {
-            setParticipantList((prevState: Array<string>) => [
-                ...prevState,
-                participantName,
-            ])
-            return participantInputUpdate()
-        } else return setParticipantError(true, "Participant List Full!")
-    }
+    //     if (participantList?.length !== maxLimit) {
+    //         setParticipantList((prevState: Array<string>) => [
+    //             ...prevState,
+    //             participantName,
+    //         ])
+    //         return participantInputUpdate()
+    //     }
+    //     return setParticipantError(true, "Participant List Full!")
+    // }
 
     const handleFormReset = () => {
         // Reset all states
         titleInputUpdate()
-        participantInputUpdate()
-        setParticipantList([])
+        // participantInputUpdate()
+        // setParticipantList([])
     }
 
     const handleFormSubmit = () => {
@@ -88,19 +77,20 @@ const FareModal = ({
 
         if (
             titleError ||
-            !titleName ||
-            participantError ||
-            !participantList.length
+            !titleName
+            // ||
+            // participantError
+            // ||
+            // !participantList.length
         )
             return console.log("Failed to Send")
 
-        callBack(
-            {
-                title: titleName,
-                date: new Date().toDateString(),
-            },
-            participantList
-        )
+        const fareData = {
+            title: titleName,
+            date: new Date().toDateString(),
+        }
+
+        // callBack(fareData, participantList)
 
         handleFormReset()
         setShowModal(false)
@@ -114,7 +104,7 @@ const FareModal = ({
             <div className={`modal ${showModal ? "modal-show" : ""}`}>
                 <div className='modal-head'>
                     <h3 className='text-xl font-medium justify-self-center text-center pb-6 border-b-2 border-light'>
-                        {modalTitle}
+                        {title ? "Edit Fare" : "Add Fare"}
                         <span
                             className='float-right px-1 cursor-pointer text-red-400 font-bold text-2xl hover:scale-110'
                             onClick={() => setShowModal(false)}
@@ -134,8 +124,9 @@ const FareModal = ({
                             inputError={titleError}
                             inputErrorMsg={titleErrorMsg}
                         />
-                        <div className='flex space-x-2'>
-                            <FormInput
+                    </form>
+                    {/* <div className='flex space-x-2'> */}
+                    {/* <FormInput
                                 id='participant-name'
                                 label='* Participant Name'
                                 placeholder='Enter Participant Name'
@@ -143,17 +134,16 @@ const FareModal = ({
                                 inputExit={handleParticpantNameExit}
                                 inputError={participantError}
                                 inputErrorMsg={participantErrorMsg}
-                            />
-                            <div className='flex space-x-3 items-end mb-12 md:mb-8'>
+                            /> */}
+                    {/* <div className='flex space-x-3 items-end mb-12 md:mb-8'>
                                 <Button
                                     className='bg-blue-500 hover:bg-blue-400'
                                     callBack={handleParticipantAdd}
                                     label='Add'
                                 />
-                            </div>
-                        </div>
-                    </form>
-                    <div className='flex flex-col'>
+                            </div> */}
+                    {/* </div> */}
+                    {/* <div className='flex flex-col'>
                         <div className='flex justify-between text-stone-400 text-xs'>
                             <label className='p-2'>Total Participants</label>
                             <label className='p-2'>
@@ -186,27 +176,25 @@ const FareModal = ({
                         </div>
                     </div>
                     <div className='flex float-right mt-6 space-x-4'>
-                        {!fare ? (
-                            <Button
-                                className='w-24 bg-transparent border hover:text-dark hover:bg-light'
-                                callBack={handleFormReset}
-                                label='Clear'
-                            />
-                        ) : (
-                            <Button
-                                className='w-24 bg-transparent border border-red-400 text-red-400 hover:text-light hover:bg-red-400'
-                                callBack={() =>
-                                    console.log("Delete Fare" + fare?.id)
-                                }
-                                label='Delete'
-                            />
-                        )}
                         <Button
+                            className='w-24 bg-transparent border hover:text-dark hover:bg-light'
+                            callBack={handleFormReset}
+                            label='Clear'
+                        />
+                        {/* // ) : (
+                        //     <Button
+                        //         className='w-24 bg-transparent border border-red-400 text-red-400 hover:text-light hover:bg-red-400'
+                        //         callBack={() => {}
+                        //         }
+                        //         label='Delete'
+                        //     />
+                        // )} */}
+                    {/* <Button
                             className='w-24 bg-green-500 hover:bg-green-400'
                             callBack={handleFormSubmit}
                             label='Save'
-                        />
-                    </div>
+                        /> */}
+                    {/* </div> */}
                 </div>
             </div>
         </div>

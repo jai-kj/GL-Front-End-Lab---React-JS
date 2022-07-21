@@ -6,9 +6,13 @@ export interface Ifare {
 
 export interface IfareProps {
     fare: Ifare
-    handleEdit: Function
 }
 
 export interface IAddFare {
+    callBack: Function
+}
+
+export interface IFareForm {
+    fare: Ifare
     callBack: Function
 }
