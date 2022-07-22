@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { ModalProps } from "../../../model/IModal"
 import { IParticipant } from "../../../model/IParticipant"
 
@@ -8,26 +8,32 @@ import useInputRef from "../../../hooks/useInputRef"
 import Dropdown from "../Dropdown"
 import FormInput from "../FormInput"
 import ExpenseSplitBetween from "../../expense/ExpenseSplitBetween"
+import Button from "../Button"
 
 const categoryList = [
-    { option: 'Accomodation', value: 'Accomodation' },
-    { option: 'Beauty & Care', value: 'Beauty & Care' },
-    { option: 'Education', value: 'Education' },
-    { option: 'Electronics', value: 'Electronics' },
-    { option: 'EMI', value: 'EMI' },
-    { option: 'Entertainment', value: 'Entertainment' },
-    { option: 'Food & Drinks', value: 'Food & Drinks' },
-    { option: 'Fuel', value: 'Fuel' },
-    { option: 'Gifts', value: 'Gifts' },
-    { option: 'Groceries', value: 'Groceries' },
-    { option: 'Healthcare', value: 'Healthcare' },
-    { option: 'Insurance', value: 'Insurance' },
-    { option: 'Investment', value: 'Investment' },
-    { option: 'Rent & Charges', value: 'Rent & Charges' },
-    { option: 'Shopping', value: 'Shopping' },
-    { option: 'Transport', value: 'Transport' },
-    { option: 'Others', value: 'Others' },
+    { option: "Accomodation", value: "Accomodation" },
+    { option: "Beauty & Care", value: "Beauty & Care" },
+    { option: "Education", value: "Education" },
+    { option: "Electronics", value: "Electronics" },
+    { option: "EMI", value: "EMI" },
+    { option: "Entertainment", value: "Entertainment" },
+    { option: "Food & Drinks", value: "Food & Drinks" },
+    { option: "Fuel", value: "Fuel" },
+    { option: "Gifts", value: "Gifts" },
+    { option: "Groceries", value: "Groceries" },
+    { option: "Healthcare", value: "Healthcare" },
+    { option: "Insurance", value: "Insurance" },
+    { option: "Investment", value: "Investment" },
+    { option: "Rent & Charges", value: "Rent & Charges" },
+    { option: "Shopping", value: "Shopping" },
+    { option: "Transport", value: "Transport" },
+    { option: "Others", value: "Others" },
 ]
+
+const defaultOption = {
+    option: "",
+    value: "",
+}
 
 const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
     const {
@@ -52,37 +58,74 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
     } = useInputRef({
         regex: /^[1-9]\d*(?:[.]\d{1,2}[^.])?$/,
         regexCheck: true,
-        defaultErrorMsg: "Expense Amount should only be positive currency values upto 2 decimal places only!",
+        defaultErrorMsg:
+            "Expense Amount should only be positive currency values upto 2 decimal places only!",
     })
 
-    const [payer, setPayer] = useState({
-        option: "",
-        value: "",
-    })
-    const [category, setCategory] = useState({
-        option: "",
-        value: "",
-    })
+    const [payer, setPayer] = useState({ ...defaultOption })
+    const [category, setCategory] = useState({ ...defaultOption })
     const {
         participants: { data: participantsData },
     } = useUIState()
+    const [splitBetweenList, setSplitBetweenList] = useState(
+        participantsData ? new Array(participantsData?.length).fill(true) : []
+    )
+
+    const resetSplitBetweenList = useCallback(() => {
+        participantsData?.length &&
+            setSplitBetweenList(new Array(participantsData?.length).fill(true))
+    }, [participantsData?.length])
+
+    useEffect(() => {
+        resetSplitBetweenList()
+    }, [participantsData, resetSplitBetweenList])
+
+    const formatToDropdownOptions = useMemo(
+        () =>
+            participantsData?.length
+                ? participantsData?.map((participant: IParticipant) => ({
+                    option: participant?.name,
+                    value: participant?.id,
+                }))
+                : [],
+        [participantsData]
+    )
+
+    const allAreFalse = useMemo(
+        () => splitBetweenList?.every((element: boolean) => element === false),
+        [splitBetweenList]
+    )
+
+    const handleSplitBetweenCheck = (index: number) => {
+        const updatedSplitList = splitBetweenList?.map(
+            (item: boolean, i: number) => (index === i ? !item : item)
+        )
+        setSplitBetweenList(updatedSplitList)
+    }
 
     const handleFormReset = () => {
         expenseTitleInputUpdate()
         expenseAmountInputUpdate()
+        setPayer({ ...defaultOption })
+        setCategory({ ...defaultOption })
+        resetSplitBetweenList()
     }
-
-    const formatToDropdownOptions = useMemo(
-        () => (participantsData?.length ? participantsData?.map((participant: IParticipant) => ({
-            option: participant?.name,
-            value: participant?.id
-        })) : []),
-        [participantsData]
-    )
 
     const handleFormSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault()
-        handleFormReset()
+
+        // Gather data
+        const title = expenseTitleInputRef?.current?.value,
+            amount = expenseAmountInputRef?.current?.value,
+            expensePayer = payer?.value,
+            expenseCategory = category?.value,
+            isSplit = splitBetweenList.length && !allAreFalse
+
+        if (!title || !amount || !expensePayer || !expenseCategory || !isSplit)
+            return console.log(
+                `Expense Title, Amount, Paid By, Category and atleast one Person to Split Expense Between are * Required fields!`
+            )
+        // handleFormReset()
     }
 
     return (
@@ -90,7 +133,10 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
             className={`modal-container ${showModal ? "modal-container-show" : ""
                 }`}
         >
-            <div className={`modal ${showModal ? "modal-show" : ""} overflow-y-auto sm:overflow-y-none`}>
+            <div
+                className={`modal ${showModal ? "modal-show" : ""
+                    } overflow-y-auto sm:overflow-y-none`}
+            >
                 <div className='modal-head'>
                     <h3 className='text-xl font-medium justify-self-center text-center pb-6 border-b-2 border-light'>
                         {"New Expense"}
@@ -118,7 +164,7 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
                         />
                         <FormInput
                             id='expense-amount'
-                            type="number"
+                            type='number'
                             label='* Expense Amount'
                             placeholder='Enter Expense Amount'
                             inputRef={expenseAmountInputRef}
@@ -142,7 +188,29 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
                                 list={categoryList}
                             />
                         </div>
-                        <ExpenseSplitBetween list={formatToDropdownOptions} id="expense-split-between" label="* Split Between" />
+                        {splitBetweenList?.length ? (
+                            <ExpenseSplitBetween
+                                list={formatToDropdownOptions}
+                                id='expense-split-between'
+                                label='* Split Between'
+                                checkedList={splitBetweenList}
+                                setCheckList={handleSplitBetweenCheck}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                        <div className='flex justify-end mt-6 space-x-3'>
+                            <Button
+                                className='w-24 h-12 bg-transparent text-white outline outline-1 hover:bg-white hover:text-dark'
+                                label='Clear'
+                                callBack={handleFormReset}
+                            />
+                            <Button
+                                className='w-24 bg-green-500 hover:bg-green-400'
+                                label='Save'
+                                type='submit'
+                            />
+                        </div>
                     </form>
                 </div>
             </div>

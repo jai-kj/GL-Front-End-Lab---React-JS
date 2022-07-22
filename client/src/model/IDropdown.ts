@@ -13,3 +13,8 @@ export interface IDropdown extends DropdownList {
     selected: DropdownSelected
     setSelected: Function
 }
+
+export interface ExpenseSplitList extends DropdownList {
+    checkedList: any
+    setCheckList: Function
+}

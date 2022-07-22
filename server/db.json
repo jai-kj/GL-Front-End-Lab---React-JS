@@ -9,6 +9,11 @@
       "id": 2,
       "title": "Harihareshwar",
       "date": "Thu Jul 21 2022"
+    },
+    {
+      "id": 3,
+      "title": "Jai's Day Out",
+      "date": "Sat Jul 23 2022"
     }
   ],
   "sharers": [
@@ -66,6 +71,11 @@
       "id": 11,
       "name": "Jeet",
       "fareId": 2
+    },
+    {
+      "id": 12,
+      "name": "Jai",
+      "fareId": 3
     }
   ],
   "expenses": []
