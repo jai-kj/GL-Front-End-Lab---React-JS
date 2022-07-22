@@ -95,6 +95,18 @@ const FareActions = (
         [handleRequest, fetchFares]
     )
 
+    const getFareFromFareList = useCallback(
+        (fareId: number) =>
+            dispatch({
+                type: ActionTypes.GET_FARE_FROM_FARE_LIST,
+                payload: {
+                    fareType,
+                    fareId
+                },
+            }),
+        [dispatch]
+    )
+
     return {
         fetchFares,
         setFare,
@@ -102,6 +114,7 @@ const FareActions = (
         addFare,
         updateFare,
         deleteFare,
+        getFareFromFareList,
     }
 }
 

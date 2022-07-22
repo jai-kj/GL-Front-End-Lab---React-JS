@@ -104,7 +104,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                         <div className='flex justify-end mt-6 space-x-3'>
                             <Button
                                 className='w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white'
-                                label={"Delete"}
+                                label='Delete'
                                 callBack={handleFareDelete}
                                 disabled={loading}
                             />

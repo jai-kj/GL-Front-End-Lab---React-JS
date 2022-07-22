@@ -1,6 +1,7 @@
 import { IfareProps } from "./../../model/Ifare"
 
 import { useUIDispatch, useUIState } from "../../context/context"
+import { Link } from "react-router-dom"
 
 const FateItem = ({ fare, callBack }: IfareProps) => {
 
@@ -15,8 +16,11 @@ const FateItem = ({ fare, callBack }: IfareProps) => {
 
     return (
         <tr className=''>
-            <td className='p-4'>{fare?.title}
-                <p className="text-xs text-stone-500 block md:hidden">{fare?.date}</p>
+            <td className='p-4'>
+                <Link to={`/fare/${fare?.id}`}>
+                    {fare?.title}
+                    <p className="text-xs text-stone-500 block md:hidden">{fare?.date}</p>
+                </Link>
             </td>
             <td className='hidden md:table-cell text-right p-4'>{fare?.date}</td>
             <td className='text-right p-4'>

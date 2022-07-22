@@ -47,7 +47,7 @@ export const useUIDispatch = () => {
 
     if (!dispatch) throw new Error("Use dispatch within a Dispatch Provider")
 
-    const { fetchFares, setFare, resetFare, addFare, updateFare, deleteFare } =
+    const { fetchFares, setFare, resetFare, addFare, updateFare, deleteFare, getFareFromFareList } =
         FareActions(dispatch)
 
     const {
@@ -65,6 +65,7 @@ export const useUIDispatch = () => {
             addFare,
             updateFare,
             deleteFare,
+            getFareFromFareList,
             fetchFareParticipants,
             resetFareParticipants,
             addFareParticipant,
@@ -77,6 +78,7 @@ export const useUIDispatch = () => {
             addFare,
             updateFare,
             deleteFare,
+            getFareFromFareList,
             fetchFareParticipants,
             resetFareParticipants,
             addFareParticipant,
