@@ -18,7 +18,8 @@ const FareList = () => {
     useEffect(() => {
         fetchFares()
         resetFare()
-    }, [fetchFares, resetFare])
+        resetFareParticipants()
+    }, [fetchFares, resetFare, resetFareParticipants])
 
     return (
         <>

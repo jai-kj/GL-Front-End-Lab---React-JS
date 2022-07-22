@@ -1,10 +1,10 @@
 import { IButton } from "../../model/IButton"
 
-const Button = ({ type = "button", className = "", callBack = () => { }, label = 'Button', disabled = false }: IButton) => {
+const Button = ({ type = "button", className = "", callBack = () => { }, height = '12', label = 'Button', disabled = false }: IButton) => {
     return (
         <button
             type={type}
-            className={`rounded-lg px-4 h-12 font-medium ${className}`}
+            className={`rounded-lg px-4 font-medium ${className} h-${height}`}
             onClick={callBack}
             disabled={disabled}
         >

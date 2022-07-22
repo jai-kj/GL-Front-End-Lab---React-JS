@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useUIDispatch, useUIState } from "../../context/context"
+
+import useModal from "../../hooks/useModal"
 import BalanceList from "../balance/BalanceList"
 import ExpenseList from "../expense/ExpenseList"
 
 import Button from "../layout/Button"
+import ExpenseModal from "../layout/modal/ExpenseModal"
 import { IParticipant } from "./../../model/IParticipant"
 
 const maxLimit = 20
@@ -13,6 +16,8 @@ const Fare = () => {
     const [isExpense, setIsExpense] = useState(true)
 
     const { fareId } = useParams()
+    const { show, setShow } = useModal()
+
     const {
         fare: {
             data: { title, date },
@@ -29,10 +34,12 @@ const Fare = () => {
 
     return (
         <div className='mt-3 mb-12 h-full'>
+            <ExpenseModal showModal={show} setShowModal={setShow} />
             <div className='flex items-center border-b border-blue-500 w-full'>
                 <Link to='/'>
                     <Button
-                        className='h-8 text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark'
+                        className='text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark py-1'
+                        height='8'
                         label='&#8592; Back'
                     />
                 </Link>
@@ -55,31 +62,34 @@ const Fare = () => {
                     Balances
                 </div>
             </div>
-            <div className='flex h-full pb-6'>
-                <div className='w-3/4 h-full'>
-                    {isExpense ? <ExpenseList /> : <BalanceList />}
-                </div>
-                <div className='w-1/4 flex flex-col h-full'>
-                    <div className='p-4 text-white text-right h-full'>
-                        <p className='text-2xl'>
-                            {title}
-                            <br />
-                            <span className='text-stone-300 text-sm'>
-                                {date}
-                            </span>
-                        </p>
-                        <p className='text-rg mt-4'>
+            <div className='flex flex-col md:flex-row h-full pb-6'>
+                <div className='w-full md:w-1/4 flex flex-col md:h-full'>
+                    <div className='py-4 text-white h-full'>
+                        <div className='relative'>
+                            <p className='text-2xl font-medium'>{title}</p>
+                            <Button
+                                className='absolute block md:hidden right-0 top-0 w-20 text-light bg-red-600 hover:bg-red-500'
+                                label='+ Add'
+                                callBack={() => setShow(true)}
+                            />
+                        </div>
+
+                        <span className='text-stone-300 text-sm'>{date}</span>
+
+                        <p className='hidden md:block text-rg mt-5'>
                             Total Participants: {participantsData?.length} /{" "}
                             {maxLimit}
                         </p>
                         {participantsData?.length ? (
-                            <ul className="flex flex-col items-end space-y-2 mt-3 max-h-96 h-full overflow-y-auto">
+                            <ul className='hidden md:flex flex-wrap gap-3 mt-3 max-h-20 md:max-h-80 lg:max-h-96 overflow-y-auto'>
                                 {participantsData?.map(
                                     (participant: IParticipant) => (
                                         <li
                                             key={participant?.id}
                                             className={`p-3 h-8 text-lg w-fit flex items-center justify-center bg-violet-600 rounded-md font-semibold`}
-                                        >{participant?.name}</li>
+                                        >
+                                            {participant?.name}
+                                        </li>
                                     )
                                 )}
                             </ul>
@@ -87,12 +97,16 @@ const Fare = () => {
                             <></>
                         )}
                     </div>
-                    <div className='mt-auto'>
+                    <div className='hidden md:block mt-auto'>
                         <Button
-                            className='float-right text-light bg-red-600 hover:bg-red-500'
+                            className='w-44 text-light bg-red-600 hover:bg-red-500'
                             label='Add New Expense'
+                            callBack={() => setShow(true)}
                         />
                     </div>
+                </div>
+                <div className='w-full md:w-3/4 h-full'>
+                    {isExpense ? <ExpenseList /> : <BalanceList />}
                 </div>
             </div>
         </div>

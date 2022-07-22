@@ -51,6 +51,7 @@ code {
     left: 50%;
     transform: translate(-50%, -100%);
     width: 46rem;
+    max-height: 46rem;
     transition: all 0.3s ease-in-out;
     perspective: 1000px;
     opacity: 0;
@@ -75,5 +76,6 @@ code {
 @media (max-width: 786px) {
     .modal {
         width: calc(100% - 2rem);
+        max-height: calc(100% - 8rem);
     }
 }
