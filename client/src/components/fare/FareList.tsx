@@ -31,7 +31,7 @@ const FareList = () => {
                 }}
             />
             <table className='mt-3 mb-12 text-light table-auto w-full max-h-96'>
-                <thead className='text-xl border-b-2 border-light'>
+                <thead className='text-xl'>
                     <tr>
                         <th className='w-7/12 text-left p-4'>Name</th>
                         <th className='hidden md:table-cell w-4/12 text-right p-4'>

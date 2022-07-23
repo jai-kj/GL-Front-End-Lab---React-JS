@@ -1,14 +1,14 @@
 import { useCallback } from "react"
 import { IParticipant } from "../../model/IParticipant"
 
-import Common from "./Common"
+import CommonActions from "./CommonActions"
 import { defaultState } from "../context"
 import { ActionTypes } from "../reducer"
 
 const ParticipantActions = (
     dispatch: React.Dispatch<{ type: string; payload?: unknown }>
 ) => {
-    const { handleRequest } = Common(dispatch)
+    const { handleRequest } = CommonActions(dispatch)
 
     const fetchFareParticipants = useCallback(
         (fareId: number) =>

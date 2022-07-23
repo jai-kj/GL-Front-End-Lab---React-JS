@@ -24,6 +24,7 @@ const FormInput = ({
                         ? "border-red-400 outline-none"
                         : "border-transparent"
                         }`}
+                    step="any"
                     ref={inputRef}
                     onBlur={inputExit}
                 />

@@ -39,7 +39,7 @@
     },
     {
       "id": 5,
-      "name": "Meet",
+      "name": "Mith",
       "fareId": 2
     },
     {
@@ -58,11 +58,6 @@
       "fareId": 2
     },
     {
-      "id": 9,
-      "name": "Pradnayesh",
-      "fareId": 2
-    },
-    {
       "id": 10,
       "name": "Pruthil",
       "fareId": 2
@@ -74,9 +69,105 @@
     },
     {
       "id": 12,
-      "name": "Jai",
-      "fareId": 3
+      "name": "Pradyanesh",
+      "fareId": 2
     }
   ],
-  "expenses": []
+  "expenses": [
+    {
+      "title": "D-Mart Snacks",
+      "amount": 685,
+      "fareId": 2,
+      "sharerId": 11,
+      "sharedBetween": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "category": "Food & Drinks",
+      "date": "Sat Jul 23 2022",
+      "id": 1
+    },
+    {
+      "title": "Vadapav Breakfast",
+      "amount": 220,
+      "fareId": 2,
+      "sharerId": 7,
+      "sharedBetween": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "category": "Food & Drinks",
+      "date": "Sat Jul 23 2022",
+      "id": 2
+    },
+    {
+      "title": "Balaji Chips",
+      "amount": 90,
+      "fareId": 2,
+      "sharerId": 11,
+      "sharedBetween": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "category": "Food & Drinks",
+      "date": "Sat Jul 23 2022",
+      "id": 3
+    },
+    {
+      "title": "Buttermilk",
+      "amount": 125,
+      "fareId": 2,
+      "sharerId": 5,
+      "sharedBetween": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "category": "Food & Drinks",
+      "date": "Sat Jul 23 2022",
+      "id": 4
+    },
+    {
+      "title": "Day1 Lunch",
+      "amount": 1720,
+      "fareId": 2,
+      "sharerId": 4,
+      "sharedBetween": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "category": "Food & Drinks",
+      "date": "Sun Jul 24 2022",
+      "id": 5
+    }
+  ]
 }

@@ -1,14 +1,14 @@
 import { useCallback } from "react"
 import { Ifare } from "./../../model/Ifare"
 
-import Common from "./Common"
+import CommonActions from "./CommonActions"
 import { defaultState, fareType } from "../context"
 import { ActionTypes } from "../reducer"
 
 const FareActions = (
     dispatch: React.Dispatch<{ type: string; payload?: unknown }>
 ) => {
-    const { handleRequest } = Common(dispatch)
+    const { handleRequest } = CommonActions(dispatch)
 
     const fetchFares = useCallback(
         () =>
@@ -23,6 +23,20 @@ const FareActions = (
                     },
                 },
                 false
+            ),
+        [handleRequest]
+    )
+
+    const getFare = useCallback(
+        (fareId: number) =>
+            handleRequest(
+                ActionTypes.GET_FARE,
+                {
+                    method: "GET",
+                    url: `/fares/${fareId}`,
+                },
+                true,
+                fareType
             ),
         [handleRequest]
     )
@@ -101,7 +115,7 @@ const FareActions = (
                 type: ActionTypes.GET_FARE_FROM_FARE_LIST,
                 payload: {
                     fareType,
-                    fareId
+                    fareId,
                 },
             }),
         [dispatch]
@@ -109,6 +123,7 @@ const FareActions = (
 
     return {
         fetchFares,
+        getFare,
         setFare,
         resetFare,
         addFare,

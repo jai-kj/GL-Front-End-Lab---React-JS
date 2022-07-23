@@ -41,7 +41,7 @@ const Dropdown = ({ id, label, selected, setSelected, list }: IDropdown) => {
                     </span>
                 </div>
                 {show ? (
-                    <ul className='absolute top w-full bg-dark rounded-b-md cursor-pointer shadow-sm shadow-stone-600 max-h-40 overflow-y-auto'>
+                    <ul className='absolute top w-full bg-dark rounded-b-md cursor-pointer shadow-sm shadow-stone-600 z-10 max-h-40 overflow-y-auto'>
                         {defaultOption.value !== selected?.value ? (
                             <li
                                 className={`px-3 py-2 last:rounded-b-md hover:bg-stone-600`}
@@ -53,7 +53,7 @@ const Dropdown = ({ id, label, selected, setSelected, list }: IDropdown) => {
                             <></>
                         )}
                         {list.map((listItem: DropdownSelected, i: number) =>
-                            listItem?.value !== selected?.value ? (
+                            `${listItem?.value}` !== (selected?.value) ? (
                                 <li
                                     key={i}
                                     className={`px-3 py-2 last:rounded-b-md hover:bg-stone-600`}

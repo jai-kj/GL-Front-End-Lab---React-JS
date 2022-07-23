@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { ModalProps } from "../../../model/IModal"
+import { IExpenseModalProps } from "../../../model/IModal"
 import { IParticipant } from "../../../model/IParticipant"
+import { IExpense } from "../../../model/IExpense"
 
-import { useUIState } from "../../../context/context"
+import { useUIDispatch, useUIState } from "../../../context/context"
 import useInputRef from "../../../hooks/useInputRef"
 
 import Dropdown from "../Dropdown"
 import FormInput from "../FormInput"
-import ExpenseSplitBetween from "../../expense/ExpenseSplitBetween"
 import Button from "../Button"
+import ExpenseSplitBetween from "../../expense/ExpenseSplitBetween"
 
 const categoryList = [
     { option: "Accomodation", value: "Accomodation" },
@@ -35,7 +36,11 @@ const defaultOption = {
     value: "",
 }
 
-const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
+const ExpenseModal = ({
+    showModal,
+    setShowModal,
+    fareId,
+}: IExpenseModalProps) => {
     const {
         inputRef: expenseTitleInputRef,
         inputError: expenseTitleError,
@@ -56,17 +61,20 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
         handleInputBlur: handleExpenseAmountExit,
         onUpdate: expenseAmountInputUpdate,
     } = useInputRef({
-        regex: /^[1-9]\d*(?:[.]\d{1,2}[^.])?$/,
+        regex: /^(?=.*[1-9])\d*\.?\d*$/gm,
         regexCheck: true,
         defaultErrorMsg:
             "Expense Amount should only be positive currency values upto 2 decimal places only!",
     })
 
-    const [payer, setPayer] = useState({ ...defaultOption })
-    const [category, setCategory] = useState({ ...defaultOption })
     const {
         participants: { data: participantsData },
+        expense: { data: expenseData, loading: expenseLoading },
     } = useUIState()
+    const { addExpense, updateExpense, deleteExpense } = useUIDispatch()
+
+    const [paidBy, setPaidBy] = useState({ ...defaultOption })
+    const [category, setCategory] = useState({ ...defaultOption })
     const [splitBetweenList, setSplitBetweenList] = useState(
         participantsData ? new Array(participantsData?.length).fill(true) : []
     )
@@ -76,9 +84,64 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
             setSplitBetweenList(new Array(participantsData?.length).fill(true))
     }, [participantsData?.length])
 
-    useEffect(() => {
+    const getParticipantOption = useCallback(
+        (id: number | null) => {
+            const participant = participantsData?.find(
+                (par: IParticipant) => par.id === id
+            )
+            return {
+                value: id ? `${id}` : "",
+                option: participant?.name ?? "Select",
+            }
+        },
+        [participantsData]
+    )
+
+    const updateShareBetween = useMemo(
+        () =>
+            participantsData?.length && expenseData?.sharedBetween?.length
+                ? participantsData?.map((participant: IParticipant) =>
+                    expenseData?.sharedBetween?.includes(participant?.id)
+                )
+                : [],
+
+        [expenseData, participantsData]
+    )
+
+    const updateStates = useCallback(() => {
+        expenseTitleInputUpdate(expenseData?.title)
+        expenseAmountInputUpdate(expenseData?.amount)
+        setPaidBy(getParticipantOption(expenseData?.sharerId))
+        setCategory({
+            option: expenseData?.category,
+            value: expenseData?.category,
+        })
+        setSplitBetweenList(updateShareBetween)
+    }, [
+        expenseData,
+        expenseTitleInputUpdate,
+        expenseAmountInputUpdate,
+        getParticipantOption,
+        updateShareBetween,
+    ])
+
+    const handleFormReset = useCallback(() => {
+        expenseTitleInputUpdate()
+        expenseAmountInputUpdate()
+        setPaidBy({ ...defaultOption })
+        setCategory({ ...defaultOption })
         resetSplitBetweenList()
-    }, [participantsData, resetSplitBetweenList])
+    }, [
+        expenseTitleInputUpdate,
+        expenseAmountInputUpdate,
+        resetSplitBetweenList,
+    ])
+
+    useEffect(() => {
+        handleFormReset()
+        if (!expenseData?.id) return
+        updateStates()
+    }, [participantsData, handleFormReset, expenseData, updateStates])
 
     const formatToDropdownOptions = useMemo(
         () =>
@@ -103,29 +166,67 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
         setSplitBetweenList(updatedSplitList)
     }
 
-    const handleFormReset = () => {
-        expenseTitleInputUpdate()
-        expenseAmountInputUpdate()
-        setPayer({ ...defaultOption })
-        setCategory({ ...defaultOption })
-        resetSplitBetweenList()
+    const handleExpenseDelete = () => {
+        if (
+            expenseLoading ||
+            !expenseData?.id ||
+            !window.confirm(
+                `Do you want to delete the Expense: ${expenseData?.title}`
+            )
+        )
+            return
+        setShowModal(false)
+        deleteExpense(fareId, expenseData?.id)
     }
 
     const handleFormSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault()
 
         // Gather data
-        const title = expenseTitleInputRef?.current?.value,
-            amount = expenseAmountInputRef?.current?.value,
-            expensePayer = payer?.value,
+        const title = expenseTitleInputRef?.current?.value?.trim(),
+            amount = expenseAmountInputRef?.current?.value?.trim(),
+            expensePayer = paidBy?.value,
             expenseCategory = category?.value,
             isSplit = splitBetweenList.length && !allAreFalse
 
-        if (!title || !amount || !expensePayer || !expenseCategory || !isSplit)
+        if (
+            !fareId ||
+            !title ||
+            expenseTitleError ||
+            !amount ||
+            expenseAmountError ||
+            !expensePayer ||
+            !expenseCategory ||
+            !isSplit
+        )
             return console.log(
                 `Expense Title, Amount, Paid By, Category and atleast one Person to Split Expense Between are * Required fields!`
             )
-        // handleFormReset()
+
+        // Make array of sharers to split bill
+        const billSplitBetween: number[] = []
+        splitBetweenList?.forEach(
+            (item: boolean, i: number) =>
+                item && billSplitBetween.push(participantsData[i]?.id)
+        )
+
+        const expense: IExpense = {
+            title,
+            amount: parseFloat(amount),
+            fareId,
+            sharerId: parseInt(expensePayer),
+            sharedBetween: billSplitBetween,
+            category: expenseCategory,
+            date: expenseData?.date
+                ? expenseData?.date
+                : new Date().toDateString(),
+        }
+
+        if (expenseData?.id) updateExpense(fareId, expenseData?.id, expense)
+        else addExpense(fareId, expense)
+
+        setShowModal(false)
+        handleFormReset()
     }
 
     return (
@@ -139,7 +240,7 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
             >
                 <div className='modal-head'>
                     <h3 className='text-xl font-medium justify-self-center text-center pb-6 border-b-2 border-light'>
-                        {"New Expense"}
+                        {expenseData?.id ? "Update Expense" : "New Expense"}
                         <span
                             className='float-right px-1 cursor-pointer text-red-400 font-bold text-2xl hover:scale-110'
                             onClick={() => setShowModal(false)}
@@ -176,8 +277,8 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
                             <Dropdown
                                 id='expense-payer'
                                 label='* Paid By'
-                                selected={payer}
-                                setSelected={setPayer}
+                                selected={paidBy}
+                                setSelected={setPaidBy}
                                 list={formatToDropdownOptions}
                             />
                             <Dropdown
@@ -200,14 +301,25 @@ const ExpenseModal = ({ showModal, setShowModal }: ModalProps) => {
                             <></>
                         )}
                         <div className='flex justify-end mt-6 space-x-3'>
-                            <Button
-                                className='w-24 h-12 bg-transparent text-white outline outline-1 hover:bg-white hover:text-dark'
-                                label='Clear'
-                                callBack={handleFormReset}
-                            />
+                            {expenseData?.id ? (
+                                <Button
+                                    className={`w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white ${expenseLoading
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
+                                        }`}
+                                    label='Delete'
+                                    callBack={handleExpenseDelete}
+                                />
+                            ) : (
+                                <Button
+                                    className='w-24 h-12 bg-transparent text-white outline outline-1 hover:bg-white hover:text-dark'
+                                    label='Clear'
+                                    callBack={handleFormReset}
+                                />
+                            )}
                             <Button
                                 className='w-24 bg-green-500 hover:bg-green-400'
-                                label='Save'
+                                label={expenseData?.id ? "Update" : "Save"}
                                 type='submit'
                             />
                         </div>

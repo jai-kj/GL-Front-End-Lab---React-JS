@@ -4,7 +4,7 @@ import { defaultState } from "../context"
 
 axios.defaults.baseURL = `http://localhost:5000`
 
-const Common = (
+const CommonActions = (
     dispatch: React.Dispatch<{ type: string; payload?: unknown }>
 ) => {
     const handleLoading = useCallback(
@@ -53,4 +53,4 @@ const Common = (
     }
 }
 
-export default Common
+export default CommonActions

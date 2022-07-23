@@ -24,21 +24,34 @@ const Fare = () => {
         },
         participants: { data: participantsData },
     } = useUIState()
-    const { getFareFromFareList, fetchFareParticipants } = useUIDispatch()
+    const { getFare, fetchFareParticipants, resetExpense } = useUIDispatch()
 
     useEffect(() => {
         if (!fareId) return
-        getFareFromFareList(parseInt(fareId))
+        getFare(parseInt(fareId))
         fetchFareParticipants(parseInt(fareId))
-    }, [fareId, getFareFromFareList, fetchFareParticipants])
+        resetExpense()
+    }, [fareId, getFare, fetchFareParticipants, resetExpense])
+
+    const handleAddExpense = () => {
+        if (!participantsData?.length) return
+        resetExpense()
+        setShow(true)
+    }
+
+    if (!fareId) return <></>
 
     return (
-        <div className='mt-3 mb-12 h-full'>
-            <ExpenseModal showModal={show} setShowModal={setShow} />
+        <div className='mt-3 expense-container'>
+            <ExpenseModal
+                showModal={show}
+                setShowModal={setShow}
+                fareId={parseInt(fareId)}
+            />
             <div className='flex items-center border-b border-blue-500 w-full'>
                 <Link to='/'>
                     <Button
-                        className='text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark py-1'
+                        className='text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark py-1 ml-0.5'
                         height='8'
                         label='&#8592; Back'
                     />
@@ -62,15 +75,15 @@ const Fare = () => {
                     Balances
                 </div>
             </div>
-            <div className='flex flex-col md:flex-row h-full pb-6'>
-                <div className='w-full md:w-1/4 flex flex-col md:h-full'>
-                    <div className='py-4 text-white h-full'>
+            <div className='flex flex-col md:flex-row expense-section'>
+                <div className='w-full md:w-1/4 flex flex-col'>
+                    <div className='py-4 text-white'>
                         <div className='relative'>
                             <p className='text-2xl font-medium'>{title}</p>
                             <Button
                                 className='absolute block md:hidden right-0 top-0 w-20 text-light bg-red-600 hover:bg-red-500'
                                 label='+ Add'
-                                callBack={() => setShow(true)}
+                                callBack={() => handleAddExpense()}
                             />
                         </div>
 
@@ -101,12 +114,19 @@ const Fare = () => {
                         <Button
                             className='w-44 text-light bg-red-600 hover:bg-red-500'
                             label='Add New Expense'
-                            callBack={() => setShow(true)}
+                            callBack={() => handleAddExpense()}
                         />
                     </div>
                 </div>
-                <div className='w-full md:w-3/4 h-full'>
-                    {isExpense ? <ExpenseList /> : <BalanceList />}
+                <div className='w-full md:w-3/4 table-container'>
+                    {isExpense ? (
+                        <ExpenseList
+                            fareId={parseInt(fareId)}
+                            setShowModal={setShow}
+                        />
+                    ) : (
+                        <BalanceList />
+                    )}
                 </div>
             </div>
         </div>
