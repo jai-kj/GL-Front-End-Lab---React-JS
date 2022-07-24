@@ -3,6 +3,9 @@ import { useUIState } from "../../context/context"
 
 import { IParticipant } from "./../../model/IParticipant"
 import { IExpense } from "./../../model/IExpense"
+import useModal from "../../hooks/useModal"
+import Button from "../layout/Button"
+import BalanceOutModal from "../layout/modal/BalanceOutModal"
 
 const BalanceList = () => {
     const {
@@ -13,10 +16,16 @@ const BalanceList = () => {
     const [participantsBalance, setParticipantsBalance] = useState(
         participantsData ? new Array(participantsData?.length).fill(0) : []
     )
-    const resetParticipantsBalance = useCallback(() => {
-        participantsData?.length &&
-            setParticipantsBalance(new Array(participantsData?.length).fill(0))
-    }, [participantsData?.length])
+
+    const { show, setShow } = useModal()
+
+    const resetParticipantsBalance = useMemo(
+        () =>
+            participantsData?.length
+                ? new Array(participantsData?.length).fill(0)
+                : [],
+        [participantsData?.length]
+    )
 
     const getParticipantsIndexes = useMemo(() => {
         let mapper: {
@@ -33,7 +42,9 @@ const BalanceList = () => {
     }, [participantsData])
 
     const calculateExpenses = useCallback(() => {
-        const balances = [...participantsBalance]
+        if (!participantsData?.length) return
+
+        const balances = [...resetParticipantsBalance]
         const participantToIndexMap = getParticipantsIndexes
 
         expenses?.forEach((expense: IExpense) => {
@@ -70,16 +81,17 @@ const BalanceList = () => {
             })
         })
         setParticipantsBalance(balances)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [expenses])
+    }, [
+        getParticipantsIndexes,
+        expenses,
+        participantsData,
+        resetParticipantsBalance,
+    ])
 
     useEffect(() => {
-        if (!participantsData?.length) return
-        resetParticipantsBalance()
         if (!expenses?.length) return
         calculateExpenses()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [participantsData, expenses])
+    }, [expenses, calculateExpenses])
 
     const getExpenseOfSharer = useCallback(
         (sharerId: number) =>
@@ -111,86 +123,148 @@ const BalanceList = () => {
         [getMaximumPayer]
     )
 
+    const toShowModal = useMemo(
+        () =>
+            participantsData?.length &&
+            participantsBalance?.length &&
+            getParticipantsIndexes &&
+            Object.keys(getParticipantsIndexes).length !== 0 &&
+            getParticipantsIndexes.constructor === Object,
+
+        [participantsData, participantsBalance, getParticipantsIndexes]
+    )
+
     return (
         <>
-            <table className='balance-table text-light w-full'>
-                <thead className='sticky top-0 text-xl bg-dark'>
-                    <tr>
-                        <th className='w-2/12 text-left p-4'>Sharers</th>
-                        <th className='w-8/12 text-center p-4' colSpan={2}>
-                            Balance
-                        </th>
-                        <th className='w-2/12 text-right p-4'>Amount Paid</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {!participantsData?.length || !expenses?.length ? (
+            {toShowModal ? (
+                <BalanceOutModal
+                    showModal={show}
+                    setShowModal={setShow}
+                    participantsBalance={participantsBalance}
+                    participantsData={participantsData}
+                    getParticipantsIndexes={getParticipantsIndexes}
+                />
+            ) : (
+                <></>
+            )}
+            <div className='table-container px-2'>
+                <table className='balance-table text-light w-full'>
+                    <thead className='sticky top-0 text-xl bg-dark'>
                         <tr>
-                            <td colSpan={4} className='p-4'>
-                                No Expenses Found!
-                            </td>
+                            <th className='w-2/12 text-left p-4'>Sharers</th>
+                            <th className='w-8/12 text-center p-4' colSpan={2}>
+                                Balance
+                            </th>
+                            <th className='w-2/12 text-right p-4'>
+                                Amount Paid
+                            </th>
                         </tr>
-                    ) : (
-                        participantsData?.map(
-                            (participant: IParticipant, i: number) => (
-                                <tr key={i} className='font-medium'>
-                                    <td className='p-4'>{participant.name}</td>
-                                    {participantsBalance[i] < 0 ? (
-                                        <>
-                                            <td>
-                                                <p className='flex space-x-3 items-center justify-end text-right'>
-                                                    <span>
-                                                        {participantsBalance[i]?.toFixed(2)?.replace(
-                                                            "-",
-                                                            "- ₹ "
-                                                        )}
-                                                    </span>
-                                                    <span
-                                                        className={`p-4 bg-red-500`}
-                                                        style={{
-                                                            width: `${getWidth(
-                                                                participantsBalance[
+                    </thead>
+                    <tbody>
+                        {!participantsData?.length || !expenses?.length ? (
+                            <tr>
+                                <td colSpan={4} className='p-4'>
+                                    No Expenses Found!
+                                </td>
+                            </tr>
+                        ) : (
+                            participantsData?.map(
+                                (participant: IParticipant, i: number) => (
+                                    <tr key={i} className='font-medium'>
+                                        <td className='p-4'>
+                                            {participant.name}
+                                        </td>
+                                        {participantsBalance[i] < 0 ? (
+                                            <>
+                                                <td>
+                                                    <p className='flex space-x-3 items-center justify-end text-right'>
+                                                        <span>
+                                                            {participantsBalance[
                                                                 i
-                                                                ]
-                                                            )}%`,
-                                                        }}
-                                                    ></span>
-                                                </p>
-                                            </td>
-                                            <td />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td />
-                                            <td>
-                                                <p className='flex space-x-3 items-center justify-start text-left'>
-                                                    <span
-                                                        className={`p-4 bg-green-500`}
-                                                        style={{
-                                                            width: `${getWidth(
-                                                                participantsBalance[
+                                                            ]
+                                                                ?.toFixed(2)
+                                                                ?.replace(
+                                                                    "-",
+                                                                    "- ₹ "
+                                                                )}
+                                                        </span>
+                                                        <span
+                                                            className={`p-4 bg-red-500`}
+                                                            style={{
+                                                                width: `${getWidth(
+                                                                    participantsBalance[
+                                                                    i
+                                                                    ]
+                                                                )}%`,
+                                                            }}
+                                                        ></span>
+                                                    </p>
+                                                </td>
+                                                <td />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td />
+                                                <td>
+                                                    <p className='flex space-x-3 items-center justify-start text-left'>
+                                                        <span
+                                                            className={`p-4 bg-green-500`}
+                                                            style={{
+                                                                width: `${getWidth(
+                                                                    participantsBalance[
+                                                                    i
+                                                                    ]
+                                                                )}%`,
+                                                            }}
+                                                        ></span>
+                                                        <span className='text-sm'>
+                                                            {`+ ₹ ${participantsBalance[
                                                                 i
-                                                                ]
-                                                            )}%`,
-                                                        }}
-                                                    ></span>
-                                                    <span className='text-sm'>
-                                                        {`+ ₹ ${participantsBalance[i]?.toFixed(2)}`}
-                                                    </span>
-                                                </p>
-                                            </td>
-                                        </>
-                                    )}
-                                    <td className='p-4 text-right'>
-                                        ₹ {getExpenseOfSharer(participant?.id)}
-                                    </td>
-                                </tr>
+                                                            ]?.toFixed(2)}`}
+                                                        </span>
+                                                    </p>
+                                                </td>
+                                            </>
+                                        )}
+                                        <td className='p-4 text-right'>
+                                            ₹{" "}
+                                            {getExpenseOfSharer(
+                                                participant?.id
+                                            )}
+                                        </td>
+                                    </tr>
+                                )
                             )
-                        )
-                    )}
-                </tbody>
-            </table>
-            <div className='w-full p-2'></div>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            <div className='flex mx-2 p-2 justify-between items-center border-t-2 border-white'>
+                {participantsData?.length && participantsBalance?.length ? (
+                    <span className='text-light mx-2 font-semibold'>
+                        Per Person Cost : ₹{" "}
+                        {(
+                            Math.round(
+                                (getExpenseOfSharer(participantsData[0]?.id) -
+                                    participantsBalance[0]) *
+                                10
+                            ) / 10
+                        ).toFixed(2)}
+                    </span>
+                ) : (
+                    <></>
+                )}
+                {toShowModal ? (
+                    <Button
+                        label='Balance Out'
+                        className='text-light bg-transparent outline outline-1 text-white hover:bg-white hover:text-dark'
+                        height='8'
+                        callBack={() => setShow(true)}
+                    />
+                ) : (
+                    <></>
+                )}
+            </div>
         </>
     )
 }

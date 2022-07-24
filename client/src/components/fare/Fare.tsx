@@ -60,8 +60,8 @@ const Fare = () => {
                 </Link>
                 <div
                     className={`cursor-pointer ml-auto font-medium flex items-center justify-center px-4 h-12 ${isExpense
-                        ? "rounded-t-lg bg-blue-500 text-white"
-                        : "text-blue-500"
+                            ? "rounded-t-lg bg-blue-500 text-white"
+                            : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(true)}
                 >
@@ -69,8 +69,8 @@ const Fare = () => {
                 </div>
                 <div
                     className={`cursor-pointer flex font-medium items-center justify-center px-4 h-12 ${!isExpense
-                        ? "rounded-t-lg bg-blue-500 text-white"
-                        : "text-blue-500"
+                            ? "rounded-t-lg bg-blue-500 text-white"
+                            : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(false)}
                 >
@@ -132,9 +132,7 @@ const Fare = () => {
                             <ExpenseAggregate />
                         </>
                     ) : (
-                        <div className='table-container px-2'>
-                            <BalanceList />
-                        </div>
+                        <BalanceList />
                     )}
                 </div>
             </div>

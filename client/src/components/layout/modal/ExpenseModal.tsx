@@ -306,8 +306,8 @@ const ExpenseModal = ({
                             {expenseData?.id ? (
                                 <Button
                                     className={`w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white ${expenseLoading
-                                        ? "cursor-not-allowed"
-                                        : "cursor-pointer"
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
                                         }`}
                                     label='Delete'
                                     callBack={handleExpenseDelete}

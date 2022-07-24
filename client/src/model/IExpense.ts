@@ -22,3 +22,9 @@ export interface IExpenseItem {
     callBack: Function
     participantsData: IParticipant[]
 }
+
+export interface IBalancedOut {
+    paidBy: string
+    receivedBy: string
+    amount: number
+}
