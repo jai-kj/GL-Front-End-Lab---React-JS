@@ -53,7 +53,7 @@ const Dropdown = ({ id, label, selected, setSelected, list }: IDropdown) => {
                             <></>
                         )}
                         {list.map((listItem: DropdownSelected, i: number) =>
-                            `${listItem?.value}` !== (selected?.value) ? (
+                            `${listItem?.value}` !== `${selected?.value}` ? (
                                 <li
                                     key={i}
                                     className={`px-3 py-2 last:rounded-b-md hover:bg-stone-600`}

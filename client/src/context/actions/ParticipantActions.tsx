@@ -19,6 +19,7 @@ const ParticipantActions = (
                     url: "/sharers",
                     params: {
                         fareId,
+                        _sort: "name"
                     },
                 },
                 false

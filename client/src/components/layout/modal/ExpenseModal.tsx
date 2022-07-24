@@ -25,9 +25,11 @@ const categoryList = [
     { option: "Healthcare", value: "Healthcare" },
     { option: "Insurance", value: "Insurance" },
     { option: "Investment", value: "Investment" },
+    { option: "Reimbersement", value: "Reimbersement" },
     { option: "Rent & Charges", value: "Rent & Charges" },
     { option: "Shopping", value: "Shopping" },
     { option: "Transport", value: "Transport" },
+    { option: "Utensils", value: "Utensils" },
     { option: "Others", value: "Others" },
 ]
 
@@ -304,8 +306,8 @@ const ExpenseModal = ({
                             {expenseData?.id ? (
                                 <Button
                                     className={`w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white ${expenseLoading
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
+                                        ? "cursor-not-allowed"
+                                        : "cursor-pointer"
                                         }`}
                                     label='Delete'
                                     callBack={handleExpenseDelete}

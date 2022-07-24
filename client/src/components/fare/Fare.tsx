@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import { useUIDispatch, useUIState } from "../../context/context"
+import { IParticipant } from "./../../model/IParticipant"
 
+import { useUIDispatch, useUIState } from "../../context/context"
 import useModal from "../../hooks/useModal"
+
 import BalanceList from "../balance/BalanceList"
 import ExpenseList from "../expense/ExpenseList"
+import ExpenseAggregate from "./../expense/ExpenseAggregate"
 
 import Button from "../layout/Button"
 import ExpenseModal from "../layout/modal/ExpenseModal"
-import { IParticipant } from "./../../model/IParticipant"
 
 const maxLimit = 20
 
@@ -53,7 +55,7 @@ const Fare = () => {
                     <Button
                         className='text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark py-1 ml-0.5'
                         height='8'
-                        label='&#8592; Back'
+                        label='&#8592; Home'
                     />
                 </Link>
                 <div
@@ -112,20 +114,27 @@ const Fare = () => {
                     </div>
                     <div className='hidden md:block mt-auto'>
                         <Button
-                            className='w-44 text-light bg-red-600 hover:bg-red-500'
-                            label='Add New Expense'
+                            className='text-light bg-red-600 hover:bg-red-500'
+                            label='Add Expense'
                             callBack={() => handleAddExpense()}
                         />
                     </div>
                 </div>
-                <div className='w-full md:w-3/4 table-container'>
+                <div className='w-full md:w-3/4 flex flex-col'>
                     {isExpense ? (
-                        <ExpenseList
-                            fareId={parseInt(fareId)}
-                            setShowModal={setShow}
-                        />
+                        <>
+                            <div className='table-container px-2'>
+                                <ExpenseList
+                                    fareId={parseInt(fareId)}
+                                    setShowModal={setShow}
+                                />
+                            </div>
+                            <ExpenseAggregate />
+                        </>
                     ) : (
-                        <BalanceList />
+                        <div className='table-container px-2'>
+                            <BalanceList />
+                        </div>
                     )}
                 </div>
             </div>
