@@ -87,7 +87,8 @@ const ExpenseModal = ({
         participants: { data: participantsData },
         expense: { data: expenseData, loading: expenseLoading },
     } = useUIState()
-    const { addExpense, updateExpense, deleteExpense } = useUIDispatch()
+    const { addExpense, updateExpense, deleteExpense, setAlert } =
+        useUIDispatch()
 
     const [paidBy, setPaidBy] = useState({ ...defaultOption })
     const [category, setCategory] = useState({ ...defaultOption })
@@ -235,7 +236,7 @@ const ExpenseModal = ({
             !expenseCategory ||
             !isSplit
         )
-            return console.log(
+            return setAlert(
                 `Expense Title, Amount, Date, Paid By, Category and atleast one Person to Split Expense Between are * Required fields!`
             )
 
@@ -351,8 +352,8 @@ const ExpenseModal = ({
                             {expenseData?.id ? (
                                 <Button
                                     className={`w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white ${expenseLoading
-                                        ? "cursor-not-allowed"
-                                        : "cursor-pointer"
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
                                         }`}
                                     label='Delete'
                                     callBack={handleExpenseDelete}

@@ -2,9 +2,10 @@ import { Link } from "react-router-dom"
 import { IfareProps } from "./../../model/Ifare"
 
 import { useUIDispatch, useUIState } from "../../context/context"
-import { truncateString } from "../utils/miscellaneous"
+import useMiscellaneous from "../../hooks/useMiscellaneous"
 
 const FateItem = ({ fare, callBack }: IfareProps) => {
+    const { truncateString } = useMiscellaneous()
     const {
         participants: { loading },
     } = useUIState()

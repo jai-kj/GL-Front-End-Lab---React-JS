@@ -9,6 +9,7 @@ import ParticipantList from "../../fare/ParticipantList"
 
 import FormInput from "../FormInput"
 import Button from "../Button"
+import useMiscellaneous from "../../../hooks/useMiscellaneous"
 
 const today = new Date().toISOString().split("T")[0]
 
@@ -38,6 +39,8 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
         defaultErrorMsg: "Please enter a valid past Date!",
     })
 
+    const { formatDateToString } = useMiscellaneous()
+
     const {
         fare: {
             data: { id, title },
@@ -45,20 +48,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
             loading,
         },
     } = useUIState()
-    const { addFare, updateFare, deleteFare } = useUIDispatch()
-
-    const formatDateToString = useCallback(
-        (dateStr: string) => {
-            if (!dateStr) return
-
-            const dateObj = new Date(dateStr)
-            dateInputUpdate(
-                `${dateObj.getFullYear()}-${dateObj.getMonth() < 10 ? "0" : ""
-                }${dateObj.getMonth()}-${dateObj.getDate()}`
-            )
-        },
-        [dateInputUpdate]
-    )
+    const { addFare, updateFare, deleteFare, setAlert } = useUIDispatch()
 
     const handleFormReset = useCallback(() => {
         titleInputUpdate()
@@ -69,15 +59,21 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
         if (!fareData?.id) handleFormReset()
 
         titleInputUpdate(fareData?.title ?? "")
-        formatDateToString(fareData?.date)
-    }, [fareData, titleInputUpdate, formatDateToString, handleFormReset])
+        formatDateToString(fareData?.date, dateInputUpdate)
+    }, [
+        fareData,
+        titleInputUpdate,
+        formatDateToString,
+        dateInputUpdate,
+        handleFormReset,
+    ])
 
     const handleFormSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault()
         const titleName = titleInputRef?.current?.value?.trim()
         const date = dateInputRef?.current?.value
         if (titleError || !titleName || dateInputError || !date || date > today)
-            return console.log("Failed to Send")
+            return setAlert("Failed to Send")
 
         const fareData: Ifare = {
             id: !id ? null : id,

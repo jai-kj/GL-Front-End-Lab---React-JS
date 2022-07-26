@@ -29,18 +29,23 @@ const ParticipantList = () => {
             data: { id: fareId },
         },
     } = useUIState()
-    const { addFareParticipant, removeFareParticipant } = useUIDispatch()
+    const { addFareParticipant, removeFareParticipant, setAlert } =
+        useUIDispatch()
 
     const handleParticipantAdd = (e: React.SyntheticEvent) => {
         e.preventDefault()
-        if (loading || !fareId) return
+        if (loading || !fareId)
+            return setAlert(`No Fare created to add participant!`)
 
         const name = participantNameInputRef?.current?.value
 
-        if (participantError || !name) return console.log("Invalid Input")
+        if (participantError || !name)
+            return setAlert("Please provide valid Input!")
 
-        if (participantsData?.length === maxLimit)
-            return setParticipantError(true, "Participant List Full!")
+        if (participantsData?.length === maxLimit) {
+            setParticipantError(true, "Participant List Full!")
+            return setAlert(`Failed to add participant!`)
+        }
 
         const participantData: IParticipant = {
             id: 0,
@@ -72,7 +77,7 @@ const ParticipantList = () => {
                 <div className='flex space-x-3 items-end mb-8'>
                     <Button
                         className='bg-blue-500 hover:bg-blue-400'
-                        type="submit"
+                        type='submit'
                         disabled={loading}
                         label='Add'
                     />

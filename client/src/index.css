@@ -99,6 +99,30 @@ code {
     z-index: 5;
 }
 
+.alert {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transition: all 0.3s ease-in-out;
+    perspective: 1000;
+}
+
+.alert-hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transform: translate(-50%, -100%);
+    transition-delay: 0.3s;
+}
+
+.alert-show {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    transform: translate(-50%, 2rem);
+    transition-delay: 0.3s;
+}
+
 table thead {
     box-shadow: 0px 2px 0px -0.5px #ffffff;
 }

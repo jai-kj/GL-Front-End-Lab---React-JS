@@ -4,7 +4,7 @@ import { useUIDispatch } from "../../context/context"
 import { IParticipant } from "../../model/IParticipant"
 import { IExpenseItem } from "./../../model/IExpense"
 
-import { truncateString } from "./../utils/miscellaneous"
+import useMiscellaneous from "./../../hooks/useMiscellaneous"
 
 const ExpenseItem = ({
     expense,
@@ -12,6 +12,7 @@ const ExpenseItem = ({
     loading,
     participantsData,
 }: IExpenseItem) => {
+    const { truncateString } = useMiscellaneous()
     const { setExpense } = useUIDispatch()
 
     const handleEdit = () => {

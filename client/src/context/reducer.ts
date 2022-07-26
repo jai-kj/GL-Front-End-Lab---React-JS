@@ -19,6 +19,8 @@ export const ActionTypes = {
     DELETE_EXPENSE: "DELETE_EXPENSE",
     SET_EXPENSE: "SET_EXPENSE",
     RESET_EXPENSE: "RESET_EXPENSE",
+    SET_ALERT: "SET_ALERT",
+    RESET_ALERT: "RESET_ALERT",
 }
 
 export const reducer = (state: any, action: any) => {
@@ -57,6 +59,12 @@ export const reducer = (state: any, action: any) => {
         case ActionTypes.SET_EXPENSE:
         case ActionTypes.RESET_EXPENSE:
             return { ...state, expense: action?.payload }
+
+        case ActionTypes.SET_ALERT:
+            return { ...state, alertMessage: action.payload }
+
+        case ActionTypes.RESET_ALERT:
+            return { ...state, alertMessage: "" }
 
         default:
             return state

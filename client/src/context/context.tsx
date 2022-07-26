@@ -4,6 +4,7 @@ import { reducer } from "./reducer"
 import { Ifare } from "./../model/Ifare"
 import { IExpense } from "../model/IExpense"
 
+import CommonActions from "./actions/CommonActions"
 import FareActions from "./actions/FareActions"
 import ParticipantActions from "./actions/ParticipantActions"
 import ExpenseActions from "./actions/ExpenseActions"
@@ -37,6 +38,7 @@ const initialState = {
     participants: { ...defaultState(false) },
     expenseList: { ...defaultState(false) },
     expense: { ...defaultState(true, expenseType) },
+    alertMessage: "",
 }
 
 const StateContext = createContext(initialState)
@@ -61,6 +63,8 @@ export const useUIDispatch = () => {
     const dispatch = useContext(DispatchContext)
 
     if (!dispatch) throw new Error("Use dispatch within a Dispatch Provider")
+
+    const { setAlert } = CommonActions(dispatch)
 
     const {
         fetchFares,
@@ -109,6 +113,7 @@ export const useUIDispatch = () => {
             deleteExpense,
             setExpense,
             resetExpense,
+            setAlert,
         }),
         [
             fetchFares,
@@ -129,6 +134,7 @@ export const useUIDispatch = () => {
             deleteExpense,
             setExpense,
             resetExpense,
+            setAlert,
         ]
     )
 }
