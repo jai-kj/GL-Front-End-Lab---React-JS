@@ -40,8 +40,6 @@ const BalanceOutModal = ({
         return transfers
     }, [participantsData, participantsBalance, getParticipantsIndexes])
 
-    console.log("balanceOutExpenses :", balanceOutExpenses)
-
     return (
         <div
             className={`modal-container ${showModal ? "modal-container-show" : ""

@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import useInputRef from "../../../hooks/useInputRef"
 
 import { ModalProps } from "../../../model/IModal"
@@ -9,6 +9,8 @@ import ParticipantList from "../../fare/ParticipantList"
 
 import FormInput from "../FormInput"
 import Button from "../Button"
+
+const today = new Date().toISOString().split("T")[0]
 
 const FareModal = ({ showModal, setShowModal }: ModalProps) => {
     const {
@@ -25,29 +27,62 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
     })
 
     const {
+        inputRef: dateInputRef,
+        inputError: dateInputError,
+        errorMsg: dateInputErrorMsg,
+        handleInputBlur: handleDateInputExit,
+        onUpdate: dateInputUpdate,
+    } = useInputRef({
+        regex: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+        regexCheck: true,
+        defaultErrorMsg: "Please enter a valid past Date!",
+    })
+
+    const {
         fare: {
-            data: { id, title, date },
+            data: { id, title },
+            data: fareData,
             loading,
         },
     } = useUIState()
     const { addFare, updateFare, deleteFare } = useUIDispatch()
 
-    useEffect(() => {
-        id ? titleInputUpdate(title ?? "") : handleFormReset()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id])
+    const formatDateToString = useCallback(
+        (dateStr: string) => {
+            if (!dateStr) return
 
-    const handleFormReset = () => titleInputUpdate()
+            const dateObj = new Date(dateStr)
+            dateInputUpdate(
+                `${dateObj.getFullYear()}-${dateObj.getMonth() < 10 ? "0" : ""
+                }${dateObj.getMonth()}-${dateObj.getDate()}`
+            )
+        },
+        [dateInputUpdate]
+    )
+
+    const handleFormReset = useCallback(() => {
+        titleInputUpdate()
+        dateInputUpdate()
+    }, [titleInputUpdate, dateInputUpdate])
+
+    useEffect(() => {
+        if (!fareData?.id) handleFormReset()
+
+        titleInputUpdate(fareData?.title ?? "")
+        formatDateToString(fareData?.date)
+    }, [fareData, titleInputUpdate, formatDateToString, handleFormReset])
 
     const handleFormSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault()
-        const titleName = titleInputRef?.current?.value
-        if (titleError || !titleName) return console.log("Failed to Send")
+        const titleName = titleInputRef?.current?.value?.trim()
+        const date = dateInputRef?.current?.value
+        if (titleError || !titleName || dateInputError || !date || date > today)
+            return console.log("Failed to Send")
 
         const fareData: Ifare = {
             id: !id ? null : id,
             title: titleName,
-            date: !id ? new Date().toDateString() : date,
+            date: new Date(date)?.toDateString(),
         }
 
         if (!id) return addFare(fareData)
@@ -80,10 +115,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                     </h3>
                 </div>
                 <div className='modal-body my-2 flex flex-col'>
-                    <form
-                        className='flex flex-col items-end space-x-0 sm:space-x-3 sm:flex-row'
-                        onSubmit={handleFormSubmit}
-                    >
+                    <form className='flex flex-col' onSubmit={handleFormSubmit}>
                         <FormInput
                             id='fare-title'
                             label='* Title'
@@ -93,11 +125,26 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                             inputError={titleError}
                             inputErrorMsg={titleErrorMsg}
                         />
-                        <Button
-                            className='w-full sm:w-24 bg-green-500 mb-0 hover:bg-green-400 sm:mb-8'
-                            type='submit'
-                            label={loading ? "..." : id ? "Update" : "Create"}
-                        />
+                        <div className='flex flex-col items-end space-x-0 sm:space-x-3 sm:flex-row'>
+                            <FormInput
+                                id='fare-date'
+                                label='* Date'
+                                type='date'
+                                max={today}
+                                placeholder='Enter Date'
+                                inputRef={dateInputRef}
+                                inputExit={handleDateInputExit}
+                                inputError={dateInputError}
+                                inputErrorMsg={dateInputErrorMsg}
+                            />
+                            <Button
+                                className='w-full sm:w-24 bg-green-500 mb-0 hover:bg-green-400 sm:mb-8'
+                                type='submit'
+                                label={
+                                    loading ? "..." : id ? "Update" : "Create"
+                                }
+                            />
+                        </div>
                     </form>
                     <ParticipantList />
                     {id ? (

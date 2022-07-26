@@ -7,7 +7,6 @@ import useModal from "../../hooks/useModal"
 
 import BalanceList from "../balance/BalanceList"
 import ExpenseList from "../expense/ExpenseList"
-import ExpenseAggregate from "./../expense/ExpenseAggregate"
 
 import Button from "../layout/Button"
 import ExpenseModal from "../layout/modal/ExpenseModal"
@@ -44,7 +43,7 @@ const Fare = () => {
     if (!fareId) return <></>
 
     return (
-        <div className='mt-3 expense-container'>
+        <>
             <ExpenseModal
                 showModal={show}
                 setShowModal={setShow}
@@ -60,8 +59,8 @@ const Fare = () => {
                 </Link>
                 <div
                     className={`cursor-pointer ml-auto font-medium flex items-center justify-center px-4 h-12 ${isExpense
-                            ? "rounded-t-lg bg-blue-500 text-white"
-                            : "text-blue-500"
+                        ? "rounded-t-lg bg-blue-500 text-white"
+                        : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(true)}
                 >
@@ -69,34 +68,44 @@ const Fare = () => {
                 </div>
                 <div
                     className={`cursor-pointer flex font-medium items-center justify-center px-4 h-12 ${!isExpense
-                            ? "rounded-t-lg bg-blue-500 text-white"
-                            : "text-blue-500"
+                        ? "rounded-t-lg bg-blue-500 text-white"
+                        : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(false)}
                 >
                     Balances
                 </div>
             </div>
-            <div className='flex flex-col md:flex-row expense-section'>
+            <div className='flex flex-col md:flex-row expense-section h-[calc(100%_-_3.0625rem)]'>
                 <div className='w-full md:w-1/4 flex flex-col'>
-                    <div className='py-4 text-white'>
-                        <div className='relative'>
-                            <p className='text-2xl font-medium'>{title}</p>
-                            <Button
-                                className='absolute block md:hidden right-0 top-0 w-20 text-light bg-red-600 hover:bg-red-500'
-                                label='+ Add'
-                                callBack={() => handleAddExpense()}
-                            />
+                    <div className='text-white'>
+                        <div className='flex justify-between py-4 items-center'>
+                            <div className='flex flex-col w-full'>
+                                <p className='text-2xl font-medium truncate ...'>
+                                    {title}
+                                </p>
+                                <span className='text-stone-300 text-xs'>
+                                    {date}
+                                </span>
+                            </div>
+                            {participantsData?.length ? (
+                                <Button
+                                    className='ml-2 block md:hidden w-20 text-light bg-red-600 hover:bg-red-500'
+                                    label='Add'
+                                    height='8'
+                                    callBack={() => handleAddExpense()}
+                                />
+                            ) : (
+                                <></>
+                            )}
                         </div>
 
-                        <span className='text-stone-300 text-sm'>{date}</span>
-
-                        <p className='hidden md:block text-rg mt-5'>
+                        <p className='hidden md:block text-rg'>
                             Total Participants: {participantsData?.length} /{" "}
                             {maxLimit}
                         </p>
                         {participantsData?.length ? (
-                            <ul className='hidden md:flex flex-wrap gap-3 mt-3 max-h-20 md:max-h-80 lg:max-h-96 overflow-y-auto'>
+                            <ul className='hidden md:flex flex-wrap gap-3 my-3 max-h-20 md:max-h-80 lg:max-h-96 overflow-y-auto'>
                                 {participantsData?.map(
                                     (participant: IParticipant) => (
                                         <li
@@ -113,30 +122,29 @@ const Fare = () => {
                         )}
                     </div>
                     <div className='hidden md:block mt-auto'>
-                        <Button
-                            className='text-light bg-red-600 hover:bg-red-500'
-                            label='Add Expense'
-                            callBack={() => handleAddExpense()}
-                        />
+                        {participantsData?.length ? (
+                            <Button
+                                className='text-light bg-red-600 hover:bg-red-500'
+                                label='Add Expense'
+                                callBack={() => handleAddExpense()}
+                            />
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </div>
-                <div className='w-full md:w-3/4 flex flex-col'>
+                <div className='w-full md:w-3/4 flex flex-col justify-between h-[calc(100%_-_5.375rem)] md:h-full md:pl-2'>
                     {isExpense ? (
-                        <>
-                            <div className='table-container px-2'>
-                                <ExpenseList
-                                    fareId={parseInt(fareId)}
-                                    setShowModal={setShow}
-                                />
-                            </div>
-                            <ExpenseAggregate />
-                        </>
+                        <ExpenseList
+                            fareId={parseInt(fareId)}
+                            setShowModal={setShow}
+                        />
                     ) : (
                         <BalanceList />
                     )}
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

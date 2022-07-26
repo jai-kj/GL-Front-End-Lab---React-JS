@@ -38,12 +38,12 @@ const ExpenseItem = ({
     return (
         <tr>
             <td className='p-4'>
-                <p className='text-lg'>{expense?.title}</p>
+                <p className='text-sm md:text-lg'>{expense?.title}</p>
                 <span className='hidden sm:block text-stone-500'>Shared Between: </span>
                 <span className='hidden sm:block text-stone-200'>
                     {getBillSharers(expense?.sharedBetween)}
                 </span>
-                <p className="text-sm block sm:hidden">
+                <p className="text-xs md:text-sm block sm:hidden">
                     <span className='text-stone-500'>Paid By: </span>
                     <span className='text-stone-200'>
                         {getParticipantName(expense?.sharerId)}
@@ -51,15 +51,15 @@ const ExpenseItem = ({
                 </p>
             </td>
             <td className='hidden sm:table-cell p-4'>
-                <p className='text-lg'>{expense?.category}</p>
+                <p className='text-sm md:text-lg'>{expense?.category}</p>
                 <span className='text-stone-500'>Paid By: </span>
                 <span className='text-stone-200'>
                     {getParticipantName(expense?.sharerId)}
                 </span>
             </td>
             <td className='p-4 text-right'>
-                <p className='text-lg'>₹ {expense?.amount?.toFixed(2)}</p>
-                <span className='text-xs sm:text-rg text-stone-200'>{expense?.date}</span>
+                <p className='text-sm md:text-lg'>₹ {expense?.amount?.toFixed(2)}</p>
+                <span className='text-xxs sm:text-rg text-stone-200'>{expense?.date}</span>
             </td>
             <td className='p-4 text-right'>
                 <i

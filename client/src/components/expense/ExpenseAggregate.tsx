@@ -18,12 +18,12 @@ const ExpenseAggregate = () => {
     )
 
     return expenses?.length ? (
-        <div className='border-t-2 border-white text-white font-medium flex text-rg sm:text-xl px-2'>
-            <div className='w-6/12 sm:w-9/12 px-4 py-2'>
+        <div className='border-t-2 border-white text-white font-medium flex text-sm md:text-xl flex h-12 items-center'>
+            <div className='w-6/12 sm:w-8/12 px-4'>
                 Total Expenses : {expenses?.length}
             </div>
-            <div className='w-4/12 sm:w-2/12 px-3 sm:px-5 py-2 text-right'>₹ {getExpensesTotal}</div>
-            <div className='w-2/12 sm:w-1/12 px-4 py-2'></div>
+            <div className='w-4/12 sm:w-3/12 px-3 md:px-5 text-right'>₹ {getExpensesTotal}</div>
+            <div className='w-2/12 sm:w-1/12'></div>
         </div>
     ) : (
         <></>

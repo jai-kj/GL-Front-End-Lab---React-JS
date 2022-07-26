@@ -1,8 +1,8 @@
 const Header = () => {
   return (
-    <h1 className='text-light text-4xl font-semibold text-center py-4'>
-      Fair Share
-    </h1>
+    <div className='flex items-center text-light justify-center py-4'>
+      <h1 className='text-4xl font-semibold'>Fair Share</h1>
+    </div>
   )
 }
 

@@ -38,6 +38,8 @@ const defaultOption = {
     value: "",
 }
 
+const today = new Date().toISOString().split("T")[0]
+
 const ExpenseModal = ({
     showModal,
     setShowModal,
@@ -67,6 +69,18 @@ const ExpenseModal = ({
         regexCheck: true,
         defaultErrorMsg:
             "Expense Amount should only be positive currency values upto 2 decimal places only!",
+    })
+
+    const {
+        inputRef: dateInputRef,
+        inputError: dateInputError,
+        errorMsg: dateInputErrorMsg,
+        handleInputBlur: handleDateInputExit,
+        onUpdate: dateInputUpdate,
+    } = useInputRef({
+        regex: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+        regexCheck: true,
+        defaultErrorMsg: "Please enter a valid past Date!",
     })
 
     const {
@@ -110,9 +124,23 @@ const ExpenseModal = ({
         [expenseData, participantsData]
     )
 
+    const formatDateToString = useCallback(
+        (dateStr: string) => {
+            if (!dateStr) return
+
+            const dateObj = new Date(dateStr)
+            dateInputUpdate(
+                `${dateObj.getFullYear()}-${dateObj.getMonth() < 10 ? "0" : ""
+                }${dateObj.getMonth()}-${dateObj.getDate()}`
+            )
+        },
+        [dateInputUpdate]
+    )
+
     const updateStates = useCallback(() => {
         expenseTitleInputUpdate(expenseData?.title)
         expenseAmountInputUpdate(expenseData?.amount)
+        formatDateToString(expenseData?.date ?? "")
         setPaidBy(getParticipantOption(expenseData?.sharerId))
         setCategory({
             option: expenseData?.category,
@@ -123,6 +151,7 @@ const ExpenseModal = ({
         expenseData,
         expenseTitleInputUpdate,
         expenseAmountInputUpdate,
+        formatDateToString,
         getParticipantOption,
         updateShareBetween,
     ])
@@ -130,12 +159,14 @@ const ExpenseModal = ({
     const handleFormReset = useCallback(() => {
         expenseTitleInputUpdate()
         expenseAmountInputUpdate()
+        dateInputUpdate()
         setPaidBy({ ...defaultOption })
         setCategory({ ...defaultOption })
         resetSplitBetweenList()
     }, [
         expenseTitleInputUpdate,
         expenseAmountInputUpdate,
+        dateInputUpdate,
         resetSplitBetweenList,
     ])
 
@@ -187,6 +218,7 @@ const ExpenseModal = ({
         // Gather data
         const title = expenseTitleInputRef?.current?.value?.trim(),
             amount = expenseAmountInputRef?.current?.value?.trim(),
+            date = dateInputRef?.current?.value,
             expensePayer = paidBy?.value,
             expenseCategory = category?.value,
             isSplit = splitBetweenList.length && !allAreFalse
@@ -197,12 +229,14 @@ const ExpenseModal = ({
             expenseTitleError ||
             !amount ||
             expenseAmountError ||
+            !date ||
+            date > today ||
             !expensePayer ||
             !expenseCategory ||
             !isSplit
         )
             return console.log(
-                `Expense Title, Amount, Paid By, Category and atleast one Person to Split Expense Between are * Required fields!`
+                `Expense Title, Amount, Date, Paid By, Category and atleast one Person to Split Expense Between are * Required fields!`
             )
 
         // Make array of sharers to split bill
@@ -219,9 +253,7 @@ const ExpenseModal = ({
             sharerId: parseInt(expensePayer),
             sharedBetween: billSplitBetween,
             category: expenseCategory,
-            date: expenseData?.date
-                ? expenseData?.date
-                : new Date().toDateString(),
+            date: new Date(date)?.toDateString(),
         }
 
         if (expenseData?.id) updateExpense(fareId, expenseData?.id, expense)
@@ -265,16 +297,29 @@ const ExpenseModal = ({
                             inputError={expenseTitleError}
                             inputErrorMsg={expenseTitleErrorMsg}
                         />
-                        <FormInput
-                            id='expense-amount'
-                            type='number'
-                            label='* Expense Amount'
-                            placeholder='Enter Expense Amount'
-                            inputRef={expenseAmountInputRef}
-                            inputExit={handleExpenseAmountExit}
-                            inputError={expenseAmountError}
-                            inputErrorMsg={expenseAmountErrorMsg}
-                        />
+                        <div className='flex flex-col w-full sm:flex-row space-x-0 sm:space-x-3 space-y-4 sm:space-y-0'>
+                            <FormInput
+                                id='expense-date'
+                                label='* Date'
+                                type='date'
+                                max={today}
+                                placeholder='Enter Date'
+                                inputRef={dateInputRef}
+                                inputExit={handleDateInputExit}
+                                inputError={dateInputError}
+                                inputErrorMsg={dateInputErrorMsg}
+                            />
+                            <FormInput
+                                id='expense-amount'
+                                type='number'
+                                label='* Expense Amount'
+                                placeholder='Enter Expense Amount'
+                                inputRef={expenseAmountInputRef}
+                                inputExit={handleExpenseAmountExit}
+                                inputError={expenseAmountError}
+                                inputErrorMsg={expenseAmountErrorMsg}
+                            />
+                        </div>
                         <div className='flex flex-col w-full sm:flex-row space-x-0 sm:space-x-3 space-y-4 sm:space-y-0'>
                             <Dropdown
                                 id='expense-payer'

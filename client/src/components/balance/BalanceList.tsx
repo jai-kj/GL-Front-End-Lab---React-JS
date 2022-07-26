@@ -125,13 +125,14 @@ const BalanceList = () => {
 
     const toShowModal = useMemo(
         () =>
+            expenses?.length &&
             participantsData?.length &&
             participantsBalance?.length &&
             getParticipantsIndexes &&
             Object.keys(getParticipantsIndexes).length !== 0 &&
             getParticipantsIndexes.constructor === Object,
 
-        [participantsData, participantsBalance, getParticipantsIndexes]
+        [expenses, participantsData, participantsBalance, getParticipantsIndexes]
     )
 
     return (
@@ -147,16 +148,16 @@ const BalanceList = () => {
             ) : (
                 <></>
             )}
-            <div className='table-container px-2'>
+            <div className='max-h-[calc(100%_-_3rem)] overflow-y-auto'>
                 <table className='balance-table text-light w-full'>
-                    <thead className='sticky top-0 text-xl bg-dark'>
+                    <thead className='sticky top-0 text-sm md:text-xl bg-dark'>
                         <tr>
                             <th className='w-2/12 text-left p-4'>Sharers</th>
                             <th className='w-8/12 text-center p-4' colSpan={2}>
                                 Balance
                             </th>
-                            <th className='w-2/12 text-right p-4'>
-                                Amount Paid
+                            <th className='hidden md:table-cell w-2/12 text-right p-4'>
+                                Paid
                             </th>
                         </tr>
                     </thead>
@@ -171,14 +172,14 @@ const BalanceList = () => {
                             participantsData?.map(
                                 (participant: IParticipant, i: number) => (
                                     <tr key={i} className='font-medium'>
-                                        <td className='p-4'>
+                                        <td className='w-2/12 p-4 text-sm md:text-lg'>
                                             {participant.name}
                                         </td>
                                         {participantsBalance[i] < 0 ? (
                                             <>
-                                                <td>
+                                                <td className='w-4/12'>
                                                     <p className='flex space-x-3 items-center justify-end text-right'>
-                                                        <span>
+                                                        <span className='text-xs md:text-rg'>
                                                             {participantsBalance[
                                                                 i
                                                             ]
@@ -205,7 +206,7 @@ const BalanceList = () => {
                                         ) : (
                                             <>
                                                 <td />
-                                                <td>
+                                                <td className='w-4/12'>
                                                     <p className='flex space-x-3 items-center justify-start text-left'>
                                                         <span
                                                             className={`p-4 bg-green-500`}
@@ -217,7 +218,7 @@ const BalanceList = () => {
                                                                 )}%`,
                                                             }}
                                                         ></span>
-                                                        <span className='text-sm'>
+                                                        <span className='text-sm md:text-lg'>
                                                             {`+ ₹ ${participantsBalance[
                                                                 i
                                                             ]?.toFixed(2)}`}
@@ -226,7 +227,7 @@ const BalanceList = () => {
                                                 </td>
                                             </>
                                         )}
-                                        <td className='p-4 text-right'>
+                                        <td className='hidden md:table-cell p-4 text-right'>
                                             ₹{" "}
                                             {getExpenseOfSharer(
                                                 participant?.id
@@ -239,9 +240,9 @@ const BalanceList = () => {
                     </tbody>
                 </table>
             </div>
-            <div className='flex mx-2 p-2 justify-between items-center border-t-2 border-white'>
-                {participantsData?.length && participantsBalance?.length ? (
-                    <span className='text-light mx-2 font-semibold'>
+            {toShowModal ? (
+                <div className='h-12 px-2 flex justify-between items-center border-t-2 border-white'>
+                    <span className='text-light font-semibold px-2 text-sm md:text-xl'>
                         Per Person Cost : ₹{" "}
                         {(
                             Math.round(
@@ -251,20 +252,16 @@ const BalanceList = () => {
                             ) / 10
                         ).toFixed(2)}
                     </span>
-                ) : (
-                    <></>
-                )}
-                {toShowModal ? (
                     <Button
                         label='Balance Out'
-                        className='text-light bg-transparent outline outline-1 text-white hover:bg-white hover:text-dark'
+                        className='text-light bg-transparent text-xs md:text-rg outline outline-1 text-white hover:bg-white hover:text-dark'
                         height='8'
                         callBack={() => setShow(true)}
                     />
-                ) : (
-                    <></>
-                )}
-            </div>
+                </div>
+            ) : (
+                <></>
+            )}
         </>
     )
 }

@@ -9,6 +9,7 @@ const FormInput = ({
     inputRef,
     inputErrorMsg,
     inputExit,
+    max = ''
 }: IFormInput) => {
     return (
         <div className='form-control flex flex-col w-full'>
@@ -26,6 +27,7 @@ const FormInput = ({
                         }`}
                     step="any"
                     ref={inputRef}
+                    max={max}
                     onBlur={inputExit}
                 />
                 <p className='text-red-300 h-8 px-2 text-xxs sm:text-xs pt-1'>

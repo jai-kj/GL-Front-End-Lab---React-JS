@@ -22,7 +22,7 @@ const FareList = () => {
     }, [fetchFares, resetFare, resetFareParticipants])
 
     return (
-        <>
+        <div className="flex flex-col h-full justify-between">
             <FareModal
                 showModal={show}
                 setShowModal={(val: boolean) => {
@@ -30,8 +30,8 @@ const FareList = () => {
                     resetFareParticipants()
                 }}
             />
-            <table className='mt-3 mb-12 text-light table-auto w-full max-h-96'>
-                <thead className='text-xl'>
+            <table className='text-light table-auto w-full max-h-[calc(100%_-_4.5rem)]'>
+                <thead className='text-xl sticky top-0 text-xl bg-dark'>
                     <tr>
                         <th className='w-7/12 text-left p-4'>Name</th>
                         <th className='hidden md:table-cell w-4/12 text-right p-4'>
@@ -71,7 +71,7 @@ const FareList = () => {
                     setShow(val)
                 }}
             />
-        </>
+        </div>
     )
 }
 

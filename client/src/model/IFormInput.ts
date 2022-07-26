@@ -7,4 +7,5 @@ export interface IFormInput {
     inputError: boolean
     inputExit: React.FocusEventHandler<HTMLInputElement>
     inputErrorMsg: string
+    max?: string
 }
