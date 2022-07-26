@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { IParticipant } from "./../../model/IParticipant"
 
 import { useUIDispatch, useUIState } from "../../context/context"
@@ -10,6 +10,7 @@ import ExpenseList from "../expense/ExpenseList"
 
 import Button from "../layout/Button"
 import ExpenseModal from "../layout/modal/ExpenseModal"
+import HomeButton from "../layout/HomeButton"
 
 const maxLimit = 20
 
@@ -50,13 +51,7 @@ const Fare = () => {
                 fareId={parseInt(fareId)}
             />
             <div className='flex items-center border-b border-blue-500 w-full'>
-                <Link to='/'>
-                    <Button
-                        className='text-xs sm:text-sm outline outline-1 bg:transparent text-white hover:bg-white hover:text-dark py-1 ml-0.5'
-                        height='8'
-                        label='&#8592; Home'
-                    />
-                </Link>
+                <HomeButton />
                 <div
                     className={`cursor-pointer ml-auto font-medium flex items-center justify-center px-4 h-12 ${isExpense
                         ? "rounded-t-lg bg-blue-500 text-white"

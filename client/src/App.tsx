@@ -6,6 +6,7 @@ import Header from "./components/layout/Header"
 import FareList from "./components/fare/FareList"
 import Alert from "./components/layout/Alert"
 import Fare from "./components/fare/Fare"
+import NotFound from "./components/layout/NotFound"
 
 const App = () => {
     return (
@@ -22,6 +23,7 @@ const App = () => {
                                     path='/fare/:fareId'
                                     element={<Fare />}
                                 />
+                                <Route path="*" element={<NotFound />} />
                             </Routes>
                         </Router>
                     </div>

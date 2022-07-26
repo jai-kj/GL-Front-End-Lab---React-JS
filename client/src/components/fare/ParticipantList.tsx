@@ -57,8 +57,14 @@ const ParticipantList = () => {
         return addFareParticipant(participantData, fareId)
     }
 
-    const handleParticipantRemove = (id: number | undefined) =>
-        !loading && id && fareId && removeFareParticipant(id, fareId)
+    const handleParticipantRemove = (index: number, id: number | undefined) =>
+        !loading &&
+        id &&
+        fareId &&
+        window.confirm(
+            `Remove ${participantsData[index]?.name} from the Fare?`
+        ) &&
+        removeFareParticipant(id, fareId)
 
     if (!fareId) return <></>
 
@@ -98,23 +104,28 @@ const ParticipantList = () => {
                                 : `No Participants Added Yet!`}
                         </div>
                     ) : (
-                        participantsData?.map((participant: IParticipant) => (
-                            <div
-                                key={participant?.id}
-                                className={`pl-2 pr-3 h-8 flex justify-center items-center bg-violet-600 rounded-md font-semibold ${loading ? "cursor-not-allowed" : ""
-                                    }`}
-                            >
-                                <span
-                                    className='mr-3 cursor-pointer hover:scale-125'
-                                    onClick={() =>
-                                        handleParticipantRemove(participant?.id)
-                                    }
+                        participantsData?.map(
+                            (participant: IParticipant, index: number) => (
+                                <div
+                                    key={participant?.id}
+                                    className={`pl-2 pr-3 h-8 flex justify-center items-center bg-violet-600 rounded-md font-semibold ${loading ? "cursor-not-allowed" : ""
+                                        }`}
                                 >
-                                    &times;
-                                </span>
-                                {participant?.name}
-                            </div>
-                        ))
+                                    <span
+                                        className='mr-3 cursor-pointer hover:scale-125'
+                                        onClick={() =>
+                                            handleParticipantRemove(
+                                                index,
+                                                participant?.id
+                                            )
+                                        }
+                                    >
+                                        &times;
+                                    </span>
+                                    {participant?.name}
+                                </div>
+                            )
+                        )
                     )}
                 </div>
             </div>

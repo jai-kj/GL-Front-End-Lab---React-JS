@@ -32,11 +32,12 @@ const ExpenseItem = ({
 
     const getBillSharers = useCallback(
         (sharers: number[]) =>
-            sharers
-                ?.map((sharer: number) => getParticipantName(sharer))
-                .join(", ")
-                ?.replace(", ,", ","),
-        [getParticipantName]
+            participantsData
+                ?.map((participant: IParticipant) =>
+                    sharers?.includes(participant?.id) ? participant?.name : ""
+                )
+                ?.join(","),
+        [participantsData]
     )
 
     return (

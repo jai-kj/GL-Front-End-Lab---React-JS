@@ -73,7 +73,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
         const titleName = titleInputRef?.current?.value?.trim()
         const date = dateInputRef?.current?.value
         if (titleError || !titleName || dateInputError || !date || date > today)
-            return setAlert("Failed to Send")
+            return setAlert("Valid Fare Name and Date are * Required!")
 
         const fareData: Ifare = {
             id: !id ? null : id,

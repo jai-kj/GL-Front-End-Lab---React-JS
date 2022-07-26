@@ -59,7 +59,7 @@ const CommonActions = (
                     type,
                     result,
                     axios?.isAxiosError(err)
-                        ? `Axios Error with Message: ${err?.message}`
+                        ? `${err?.request?.statusText ?? err?.message}`
                         : err
                 )
             } finally {

@@ -41,6 +41,14 @@ const BalanceList = () => {
         return mapper
     }, [participantsData])
 
+    const countOfCommon = useCallback(
+        (sharedBetween: number[]) =>
+            participantsData?.filter((participant: IParticipant) =>
+                sharedBetween?.includes(participant?.id)
+            )?.length,
+        [participantsData]
+    )
+
     const calculateExpenses = useCallback(() => {
         if (!participantsData?.length) return
 
@@ -52,17 +60,18 @@ const BalanceList = () => {
                 ? participantToIndexMap[expense?.sharerId]
                 : -1
 
+            let countOfCommonParticpant = countOfCommon(expense?.sharedBetween)
+
             balances[participantIndex] += expense?.amount
             const reduction =
                 Math.round(
-                    ((expense?.amount ?? 0) / expense?.sharedBetween?.length) *
-                    100
+                    ((expense?.amount ?? 0) / countOfCommonParticpant) * 100
                 ) / 100
 
             let difference =
                 Math.round(
                     ((expense?.amount ?? 0) -
-                        reduction * expense?.sharedBetween?.length) *
+                        reduction * countOfCommonParticpant) *
                     100
                 ) / 100
 
@@ -86,6 +95,7 @@ const BalanceList = () => {
         expenses,
         participantsData,
         resetParticipantsBalance,
+        countOfCommon,
     ])
 
     useEffect(() => {
