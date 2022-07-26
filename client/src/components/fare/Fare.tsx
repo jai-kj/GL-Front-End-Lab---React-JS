@@ -80,7 +80,7 @@ const Fare = () => {
                 <div className='w-full md:w-1/4 flex flex-col'>
                     <div className='text-white'>
                         <div className='flex justify-between py-4 items-center'>
-                            <div className='flex flex-col w-full'>
+                            <div className='flex flex-col max-w-[calc(100%_-_5rem)] md:max-w-full'>
                                 <p className='text-2xl font-medium truncate ...'>
                                     {title}
                                 </p>

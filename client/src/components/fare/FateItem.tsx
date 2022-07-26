@@ -1,16 +1,14 @@
+import { Link } from "react-router-dom"
 import { IfareProps } from "./../../model/Ifare"
 
 import { useUIDispatch, useUIState } from "../../context/context"
-import { Link } from "react-router-dom"
+import { truncateString } from "../utils/miscellaneous"
 
 const FateItem = ({ fare, callBack }: IfareProps) => {
     const {
         participants: { loading },
     } = useUIState()
     const { fetchFareParticipants, setFare } = useUIDispatch()
-
-    const truncateString = (str: string, num: number = 25) =>
-        str.length > num ? str.slice(0, num) + "..." : str
 
     const handleEdit = () => {
         setFare(fare)
@@ -22,7 +20,12 @@ const FateItem = ({ fare, callBack }: IfareProps) => {
         <tr className=''>
             <td className='p-4'>
                 <Link to={`/fare/${fare?.id}`}>
-                    <span>{truncateString(fare?.title ?? "")}</span>
+                    <span className='hidden md:block'>
+                        {truncateString(fare?.title, 75)}
+                    </span>
+                    <span className='md:hidden'>
+                        {truncateString(fare?.title)}
+                    </span>
                     <p className='text-xs text-stone-500 block md:hidden'>
                         {fare?.date}
                     </p>

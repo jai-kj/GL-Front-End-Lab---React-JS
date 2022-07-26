@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import axios, { AxiosRequestConfig } from "axios"
 import { defaultState } from "../context"
 
-axios.defaults.baseURL = `http://localhost:5000`
+// axios.defaults.baseURL = `http://localhost:5000`
 
 const CommonActions = (
     dispatch: React.Dispatch<{ type: string; payload?: unknown }>

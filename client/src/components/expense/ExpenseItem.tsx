@@ -4,6 +4,8 @@ import { useUIDispatch } from "../../context/context"
 import { IParticipant } from "../../model/IParticipant"
 import { IExpenseItem } from "./../../model/IExpense"
 
+import { truncateString } from "./../utils/miscellaneous"
+
 const ExpenseItem = ({
     expense,
     callBack,
@@ -31,19 +33,27 @@ const ExpenseItem = ({
         (sharers: number[]) =>
             sharers
                 ?.map((sharer: number) => getParticipantName(sharer))
-                .join(", ")?.replace(", ,", ","),
+                .join(", ")
+                ?.replace(", ,", ","),
         [getParticipantName]
     )
 
     return (
         <tr>
             <td className='p-4'>
-                <p className='text-sm md:text-lg'>{expense?.title}</p>
-                <span className='hidden sm:block text-stone-500'>Shared Between: </span>
+                <p className='md:hidden text-sm md:text-lg'>
+                    {truncateString(expense?.title)}
+                </p>
+                <p className='hidden md:block text-sm md:text-lg'>
+                    {expense?.title}
+                </p>
+                <span className='hidden sm:block text-stone-500'>
+                    Shared Between:{" "}
+                </span>
                 <span className='hidden sm:block text-stone-200'>
                     {getBillSharers(expense?.sharedBetween)}
                 </span>
-                <p className="text-xs md:text-sm block sm:hidden">
+                <p className='text-xs md:text-sm block sm:hidden'>
                     <span className='text-stone-500'>Paid By: </span>
                     <span className='text-stone-200'>
                         {getParticipantName(expense?.sharerId)}
@@ -58,8 +68,12 @@ const ExpenseItem = ({
                 </span>
             </td>
             <td className='p-4 text-right'>
-                <p className='text-sm md:text-lg'>₹ {expense?.amount?.toFixed(2)}</p>
-                <span className='text-xxs sm:text-rg text-stone-200'>{expense?.date}</span>
+                <p className='text-sm md:text-lg'>
+                    ₹ {expense?.amount?.toFixed(2)}
+                </p>
+                <span className='text-xxs sm:text-rg text-stone-200'>
+                    {expense?.date}
+                </span>
             </td>
             <td className='p-4 text-right'>
                 <i

@@ -132,7 +132,12 @@ const BalanceList = () => {
             Object.keys(getParticipantsIndexes).length !== 0 &&
             getParticipantsIndexes.constructor === Object,
 
-        [expenses, participantsData, participantsBalance, getParticipantsIndexes]
+        [
+            expenses,
+            participantsData,
+            participantsBalance,
+            getParticipantsIndexes,
+        ]
     )
 
     return (
@@ -152,7 +157,9 @@ const BalanceList = () => {
                 <table className='balance-table text-light w-full'>
                     <thead className='sticky top-0 text-sm md:text-xl bg-dark'>
                         <tr>
-                            <th className='w-2/12 text-left p-4'>Sharers</th>
+                            <th className='w-4/12 md:w-2/12 text-left p-4'>
+                                Sharers
+                            </th>
                             <th className='w-8/12 text-center p-4' colSpan={2}>
                                 Balance
                             </th>
@@ -173,7 +180,13 @@ const BalanceList = () => {
                                 (participant: IParticipant, i: number) => (
                                     <tr key={i} className='font-medium'>
                                         <td className='w-2/12 p-4 text-sm md:text-lg'>
-                                            {participant.name}
+                                            <p>{participant.name}</p>
+                                            <p className='md:hidden text-stone-500 text-xs'>
+                                                Paid : ₹{" "}
+                                                {getExpenseOfSharer(
+                                                    participant?.id
+                                                )}
+                                            </p>
                                         </td>
                                         {participantsBalance[i] < 0 ? (
                                             <>

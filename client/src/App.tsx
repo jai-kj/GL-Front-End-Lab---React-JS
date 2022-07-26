@@ -8,7 +8,7 @@ import Fare from "./components/fare/Fare"
 const App = () => {
     return (
         <ContextProvider>
-            <div className='app w-full h-full bg-dark'>
+            <div className='app w-screen h-screen bg-dark'>
                 <div className='container h-full flex flex-col mx-auto px-6 lg:px-12 overflow-y-hidden'>
                     <Header />
                     <div className="app-container h-[calc(100%_-_7.5rem)]">

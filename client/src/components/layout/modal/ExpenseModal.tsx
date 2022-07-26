@@ -297,7 +297,7 @@ const ExpenseModal = ({
                             inputError={expenseTitleError}
                             inputErrorMsg={expenseTitleErrorMsg}
                         />
-                        <div className='flex flex-col w-full sm:flex-row space-x-0 sm:space-x-3 space-y-4 sm:space-y-0'>
+                        <div className='flex flex-col w-full sm:flex-row space-x-0 sm:space-x-3'>
                             <FormInput
                                 id='expense-date'
                                 label='* Date'
@@ -351,8 +351,8 @@ const ExpenseModal = ({
                             {expenseData?.id ? (
                                 <Button
                                     className={`w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white ${expenseLoading
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
+                                        ? "cursor-not-allowed"
+                                        : "cursor-pointer"
                                         }`}
                                     label='Delete'
                                     callBack={handleExpenseDelete}
