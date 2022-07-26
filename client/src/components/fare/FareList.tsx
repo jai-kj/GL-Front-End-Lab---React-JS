@@ -22,7 +22,7 @@ const FareList = () => {
     }, [fetchFares, resetFare, resetFareParticipants])
 
     return (
-        <div className="flex flex-col h-full justify-between">
+        <div className='flex flex-col h-full justify-between'>
             <FareModal
                 showModal={show}
                 setShowModal={(val: boolean) => {

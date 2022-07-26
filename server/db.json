@@ -1,5 +1,30 @@
 {
-  "fares": [],
-  "sharers": [],
-  "expenses": []
+  "fares": [
+    {
+      "id": 1,
+      "title": "Mystery Rooms with Cousins",
+      "date": "Sat Mar 19 2022"
+    }
+  ],
+  "sharers": [
+    {
+      "id": 1,
+      "name": "Jai",
+      "fareId": 1
+    }
+  ],
+  "expenses": [
+    {
+      "title": "D-Mart Snacks",
+      "amount": 150,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1
+      ],
+      "category": "Food & Drinks",
+      "date": "Sat Mar 19 2022",
+      "id": 1
+    }
+  ]
 }

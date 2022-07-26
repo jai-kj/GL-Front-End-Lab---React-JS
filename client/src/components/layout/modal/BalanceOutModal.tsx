@@ -86,7 +86,7 @@ const BalanceOutModal = ({
                                 )
                             )
                         ) : (
-                            <p>No Expenses Found to Balance Out!</p>
+                            <p>Nothing Found to Balance Out!</p>
                         )}
                     </div>
                 </div>

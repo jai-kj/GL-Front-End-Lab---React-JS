@@ -15,4 +15,4 @@ app.use(router)
 
 // Setup App Server
 const PORT = 5000
-app.listen(PORT, () => console.log(`Fake DB Server running on PORT: ${PORT}`))
+app.listen(PORT, () => console.log(`Json-Server running on PORT: ${PORT}`))
