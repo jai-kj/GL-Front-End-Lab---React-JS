@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react"
 import useInputRef from "../../../hooks/useInputRef"
+import useMiscellaneous from "../../../hooks/useMiscellaneous"
 
 import { ModalProps } from "../../../model/IModal"
 import { Ifare } from "./../../../model/Ifare"
@@ -9,7 +10,7 @@ import ParticipantList from "../../fare/ParticipantList"
 
 import FormInput from "../FormInput"
 import Button from "../Button"
-import useMiscellaneous from "../../../hooks/useMiscellaneous"
+import Loader from "../loader/Loader"
 
 const today = new Date().toISOString().split("T")[0]
 
@@ -68,7 +69,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
         handleFormReset,
     ])
 
-    const handleFormSubmit = (e: React.SyntheticEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const titleName = titleInputRef?.current?.value?.trim()
         const date = dateInputRef?.current?.value
@@ -81,16 +82,15 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
             date: new Date(date)?.toDateString(),
         }
 
-        if (!id) return addFare(fareData)
-
-        return updateFare(fareData, id)
+        if (!id) await addFare(fareData)
+        else await updateFare(fareData, id)
     }
 
-    const handleFareDelete = () => {
+    const handleFareDelete = async () => {
         if (!id || !window.confirm(`Do you want to delete the Fare: ${title}`))
             return
+        await deleteFare(id)
         setShowModal(false)
-        deleteFare(id)
     }
 
     return (
@@ -137,7 +137,13 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                                 className='w-full sm:w-24 bg-green-500 mb-0 hover:bg-green-400 sm:mb-8'
                                 type='submit'
                                 label={
-                                    loading ? "..." : id ? "Update" : "Create"
+                                    loading ? (
+                                        <Loader />
+                                    ) : id ? (
+                                        "Update"
+                                    ) : (
+                                        "Create"
+                                    )
                                 }
                             />
                         </div>
@@ -147,7 +153,7 @@ const FareModal = ({ showModal, setShowModal }: ModalProps) => {
                         <div className='flex justify-end mt-6 space-x-3'>
                             <Button
                                 className='w-24 h-12 bg-transparent text-red-400 outline outline-1 outline-red-400 hover:bg-red-400 hover:text-white'
-                                label='Delete'
+                                label={loading ? <Loader /> : "Delete"}
                                 callBack={handleFareDelete}
                                 disabled={loading}
                             />

@@ -11,6 +11,7 @@ import ExpenseList from "../expense/ExpenseList"
 import Button from "../layout/Button"
 import ExpenseModal from "../layout/modal/ExpenseModal"
 import HomeButton from "../layout/HomeButton"
+import Loader from "../layout/loader/Loader"
 
 const maxLimit = 20
 
@@ -24,7 +25,10 @@ const Fare = () => {
         fare: {
             data: { title, date },
         },
-        participants: { data: participantsData },
+        participants: {
+            data: participantsData,
+            loading: particpantsDataLoading,
+        },
     } = useUIState()
     const { getFare, fetchFareParticipants, resetExpense } = useUIDispatch()
 
@@ -54,8 +58,8 @@ const Fare = () => {
                 <HomeButton />
                 <div
                     className={`cursor-pointer ml-auto font-medium flex items-center justify-center px-4 h-12 ${isExpense
-                        ? "rounded-t-lg bg-blue-500 text-white"
-                        : "text-blue-500"
+                            ? "rounded-t-lg bg-blue-500 text-white"
+                            : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(true)}
                 >
@@ -63,8 +67,8 @@ const Fare = () => {
                 </div>
                 <div
                     className={`cursor-pointer flex font-medium items-center justify-center px-4 h-12 ${!isExpense
-                        ? "rounded-t-lg bg-blue-500 text-white"
-                        : "text-blue-500"
+                            ? "rounded-t-lg bg-blue-500 text-white"
+                            : "text-blue-500"
                         }`}
                     onClick={() => setIsExpense(false)}
                 >
@@ -73,47 +77,57 @@ const Fare = () => {
             </div>
             <div className='flex flex-col md:flex-row expense-section h-[calc(100%_-_3.0625rem)]'>
                 <div className='w-full md:w-1/4 flex flex-col'>
-                    <div className='text-white'>
-                        <div className='flex justify-between py-4 items-center'>
-                            <div className='flex flex-col max-w-[calc(100%_-_5rem)] md:max-w-full'>
-                                <p className='text-2xl font-medium truncate ...'>
-                                    {title}
-                                </p>
-                                <span className='text-stone-300 text-xs'>
-                                    {date}
-                                </span>
-                            </div>
-                            {participantsData?.length ? (
-                                <Button
-                                    className='ml-2 block md:hidden w-20 text-light bg-red-600 hover:bg-red-500'
-                                    label='Add'
-                                    height='8'
-                                    callBack={() => handleAddExpense()}
-                                />
-                            ) : (
-                                <></>
-                            )}
-                        </div>
-
-                        <p className='hidden md:block text-rg'>
-                            Total Participants: {participantsData?.length} /{" "}
-                            {maxLimit}
-                        </p>
-                        {participantsData?.length ? (
-                            <ul className='hidden md:flex flex-wrap gap-3 my-3 max-h-20 md:max-h-80 lg:max-h-96 overflow-y-auto'>
-                                {participantsData?.map(
-                                    (participant: IParticipant) => (
-                                        <li
-                                            key={participant?.id}
-                                            className={`p-3 h-8 text-lg w-fit flex items-center justify-center bg-violet-600 rounded-md font-semibold`}
-                                        >
-                                            {participant?.name}
-                                        </li>
-                                    )
-                                )}
-                            </ul>
+                    <div className='text-white pt-4'>
+                        {particpantsDataLoading ? (
+                            <Loader />
                         ) : (
-                            <></>
+                            <>
+                                <div className='flex justify-between pb-4 items-center'>
+                                    <div className='flex flex-col max-w-[calc(100%_-_5rem)] md:max-w-full'>
+                                        <p className='text-2xl font-medium truncate ...'>
+                                            {title}
+                                        </p>
+                                        <span className='text-stone-300 text-xs'>
+                                            {date}
+                                        </span>
+                                    </div>
+                                    {participantsData?.length ? (
+                                        <Button
+                                            className='ml-2 block md:hidden w-20 text-light bg-red-600 hover:bg-red-500'
+                                            label='Add'
+                                            height='8'
+                                            callBack={() => handleAddExpense()}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+
+                                <p className='hidden md:block text-rg'>
+                                    Total Participants:{" "}
+                                    {participantsData?.length} / {maxLimit}
+                                </p>
+                                {participantsData?.length ? (
+                                    <ul className='hidden md:flex flex-wrap gap-3 my-3 max-h-20 md:max-h-80 lg:max-h-96 overflow-y-auto'>
+                                        {particpantsDataLoading ? (
+                                            <Loader />
+                                        ) : (
+                                            participantsData?.map(
+                                                (participant: IParticipant) => (
+                                                    <li
+                                                        key={participant?.id}
+                                                        className={`p-3 h-8 text-lg w-fit flex items-center justify-center bg-violet-600 rounded-md font-semibold`}
+                                                    >
+                                                        {participant?.name}
+                                                    </li>
+                                                )
+                                            )
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <></>
+                                )}
+                            </>
                         )}
                     </div>
                     <div className='hidden md:block mt-auto'>

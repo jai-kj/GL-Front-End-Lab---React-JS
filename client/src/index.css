@@ -76,7 +76,7 @@ code {
     left: 50%;
     transform: translate(-50%, -100%);
     width: 46rem;
-    max-height: 46rem;
+    max-height: calc(100% - 6rem);
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
     perspective: 1000px;
@@ -127,9 +127,29 @@ table thead {
     box-shadow: 0px 2px 0px -0.5px #ffffff;
 }
 
+.loader {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 3px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @media (max-width: 786px) {
     .modal {
         width: calc(100% - 2rem);
-        max-height: calc(100% - 6rem);
     }
 }

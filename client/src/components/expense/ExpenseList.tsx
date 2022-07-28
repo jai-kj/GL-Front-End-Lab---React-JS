@@ -4,6 +4,7 @@ import { useUIDispatch, useUIState } from "../../context/context"
 
 import ExpenseItem from "./ExpenseItem"
 import ExpenseAggregate from "./ExpenseAggregate"
+import Loader from "../layout/loader/Loader"
 
 const ExpenseList = ({ fareId, setShowModal }: IExpenseListProps) => {
     const {
@@ -22,8 +23,8 @@ const ExpenseList = ({ fareId, setShowModal }: IExpenseListProps) => {
                 <table className='expense-table text-light w-full'>
                     <thead className='sticky top-0 text-sm md:text-xl bg-dark'>
                         <tr>
-                            <th className='w-7/12 text-left p-4'>Expense</th>
-                            <th className='hidden sm:table-cell w-2/12 text-left p-4'>Category</th>
+                            <th className='w-7/12 sm:w-6/12 text-left p-4'>Expense</th>
+                            <th className='hidden sm:table-cell w-3/12 text-left p-4'>Category</th>
                             <th className='w-4/12 sm:w-2/12 text-right p-4'>
                                 Amount
                             </th>
@@ -35,7 +36,7 @@ const ExpenseList = ({ fareId, setShowModal }: IExpenseListProps) => {
                             <tr>
                                 <td colSpan={4} className='p-4'>
                                     {loading
-                                        ? "Loading ..."
+                                        ? <Loader />
                                         : error
                                             ? error
                                             : !expenses?.length

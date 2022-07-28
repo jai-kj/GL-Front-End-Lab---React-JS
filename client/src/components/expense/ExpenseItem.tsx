@@ -31,12 +31,19 @@ const ExpenseItem = ({
     )
 
     const getBillSharers = useCallback(
-        (sharers: number[]) =>
-            participantsData
-                ?.map((participant: IParticipant) =>
-                    sharers?.includes(participant?.id) ? participant?.name : ""
-                )
-                ?.join(","),
+        (sharers: number[]) => {
+            let nameStr = ""
+            participantsData?.forEach(
+                (participant: IParticipant, index: number) => {
+                    nameStr += sharers?.includes(participant?.id)
+                        ? `${participant?.name}${index + 1 !== participantsData?.length ? ", " : ""
+                        }`
+                        : ""
+                }
+            )
+            return nameStr?.replace(/(, $)/g, "")
+        },
+
         [participantsData]
     )
 

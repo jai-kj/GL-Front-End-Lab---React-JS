@@ -86,6 +86,7 @@ export const useUIDispatch = () => {
 
     const {
         fetchExpenses,
+        resetExpenseList,
         addExpense,
         updateExpense,
         deleteExpense,
@@ -108,6 +109,7 @@ export const useUIDispatch = () => {
             addFareParticipant,
             removeFareParticipant,
             fetchExpenses,
+            resetExpenseList,
             addExpense,
             updateExpense,
             deleteExpense,
@@ -129,6 +131,7 @@ export const useUIDispatch = () => {
             addFareParticipant,
             removeFareParticipant,
             fetchExpenses,
+            resetExpenseList,
             addExpense,
             updateExpense,
             deleteExpense,

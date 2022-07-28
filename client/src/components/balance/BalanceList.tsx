@@ -266,7 +266,7 @@ const BalanceList = () => {
             {toShowModal ? (
                 <div className='h-12 px-2 flex justify-between items-center border-t-2 border-white'>
                     <span className='text-light font-semibold px-2 text-sm md:text-xl'>
-                        Per Person Cost : ₹{" "}
+                        Average Cost : ₹{" "}
                         {(
                             Math.round(
                                 (getExpenseOfSharer(participantsData[0]?.id) -

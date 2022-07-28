@@ -28,6 +28,15 @@ const ExpenseActions = (
         [handleRequest]
     )
 
+    const resetExpenseList = useCallback(
+        () =>
+            dispatch({
+                type: ActionTypes.RESET_EXPENSES_OF_FARE,
+                payload: { ...defaultState(false) },
+            }),
+        [dispatch]
+    )
+
     const addExpense = useCallback(
         async (fareId: number, expense: IExpense) => {
             await handleRequest(
@@ -98,6 +107,7 @@ const ExpenseActions = (
 
     return {
         fetchExpenses,
+        resetExpenseList,
         addExpense,
         updateExpense,
         deleteExpense,

@@ -7,10 +7,12 @@ import FareItem from "./FateItem"
 
 import useModal from "../../hooks/useModal"
 import FareModal from "../layout/modal/FareModal"
+import Loader from "../layout/loader/Loader"
 
 const FareList = () => {
     const { show, setShow } = useModal()
-    const { fetchFares, resetFare, resetFareParticipants } = useUIDispatch()
+    const { fetchFares, resetFare, resetFareParticipants, resetExpenseList } =
+        useUIDispatch()
     const {
         fareList: { loading, error, data },
     } = useUIState()
@@ -19,7 +21,8 @@ const FareList = () => {
         fetchFares()
         resetFare()
         resetFareParticipants()
-    }, [fetchFares, resetFare, resetFareParticipants])
+        resetExpenseList()
+    }, [fetchFares, resetFare, resetFareParticipants, resetExpenseList])
 
     return (
         <div className='flex flex-col h-full justify-between'>
@@ -44,13 +47,15 @@ const FareList = () => {
                     {(loading || error || !data?.length) && (
                         <tr>
                             <td colSpan={3} className='p-4'>
-                                {loading
-                                    ? "Loading ..."
-                                    : error
-                                        ? error
-                                        : !data?.length
-                                            ? "No Fares Found!"
-                                            : ""}
+                                {loading ? (
+                                    <Loader />
+                                ) : error ? (
+                                    error
+                                ) : !data?.length ? (
+                                    "No Fares Found!"
+                                ) : (
+                                    ""
+                                )}
                             </td>
                         </tr>
                     )}

@@ -14,6 +14,7 @@ export const ActionTypes = {
     ADD_FARE_PARTICPANT: "ADD_FARE_PARTICPANT",
     REMOVE_FARE_PARTICPANT: "REMOVE_FARE_PARTICPANT",
     GET_EXPENSES_OF_FARE: "GET_EXPENSES_OF_FARE",
+    RESET_EXPENSES_OF_FARE: "RESET_EXPENSES_OF_FARE",
     ADD_EXPENSE: "ADD_EXPENSE",
     UPDATE_EXPENSE: "UPDATE_EXPENSE",
     DELETE_EXPENSE: "DELETE_EXPENSE",
@@ -51,6 +52,7 @@ export const reducer = (state: any, action: any) => {
             return { ...state, fare }
 
         case ActionTypes.GET_EXPENSES_OF_FARE:
+        case ActionTypes.RESET_EXPENSES_OF_FARE:
             return { ...state, expenseList: action?.payload }
 
         case ActionTypes.ADD_EXPENSE:

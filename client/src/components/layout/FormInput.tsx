@@ -26,6 +26,7 @@ const FormInput = ({
                         : "border-transparent"
                         }`}
                     step="any"
+                    autoComplete="off"
                     ref={inputRef}
                     max={max}
                     onBlur={inputExit}

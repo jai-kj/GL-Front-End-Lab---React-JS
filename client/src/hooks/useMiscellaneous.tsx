@@ -12,9 +12,10 @@ const useMiscellaneous = () => {
             if (!dateStr) return
 
             const dateObj = new Date(dateStr)
+
             callBack(
-                `${dateObj.getFullYear()}-${dateObj.getMonth() < 10 ? "0" : ""
-                }${dateObj.getMonth() + 1}-${dateObj.getDate()}`
+                `${dateObj.getFullYear()}-${`${dateObj.getMonth() + 1
+                    }`.padStart(2, "0")}-${`${dateObj.getDate()}`.padStart(2, "0")}`
             )
         },
         []

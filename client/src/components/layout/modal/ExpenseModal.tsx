@@ -5,29 +5,39 @@ import { IExpense } from "../../../model/IExpense"
 
 import { useUIDispatch, useUIState } from "../../../context/context"
 import useInputRef from "../../../hooks/useInputRef"
+import useMiscellaneous from "../../../hooks/useMiscellaneous"
 
 import Dropdown from "../Dropdown"
 import FormInput from "../FormInput"
 import Button from "../Button"
 import ExpenseSplitBetween from "../../expense/ExpenseSplitBetween"
+import Loader from "../loader/Loader"
 
 const categoryList = [
     { option: "Accomodation", value: "Accomodation" },
+    { option: "Activities", value: "Activities" },
     { option: "Beauty & Care", value: "Beauty & Care" },
+    { option: "Bills", value: "Bills" },
+    { option: "Crockery", value: "Crockery" },
     { option: "Education", value: "Education" },
     { option: "Electronics", value: "Electronics" },
     { option: "EMI", value: "EMI" },
     { option: "Entertainment", value: "Entertainment" },
     { option: "Food & Drinks", value: "Food & Drinks" },
     { option: "Fuel", value: "Fuel" },
+    { option: "Games & Fun", value: "Games & Fun" },
     { option: "Gifts", value: "Gifts" },
     { option: "Groceries", value: "Groceries" },
     { option: "Healthcare", value: "Healthcare" },
     { option: "Insurance", value: "Insurance" },
     { option: "Investment", value: "Investment" },
+    { option: "Movies & Theatre", value: "Movies & Theatre" },
     { option: "Reimbersement", value: "Reimbersement" },
     { option: "Rent & Charges", value: "Rent & Charges" },
+    { option: "Repairs & Charges", value: "Repairs & Charges" },
     { option: "Shopping", value: "Shopping" },
+    { option: "Subscription", value: "Subscription" },
+    { option: "Travel", value: "Travel" },
     { option: "Transport", value: "Transport" },
     { option: "Utensils", value: "Utensils" },
     { option: "Others", value: "Others" },
@@ -84,6 +94,9 @@ const ExpenseModal = ({
     })
 
     const {
+        fare: {
+            data: { date: fareDate },
+        },
         participants: { data: participantsData },
         expense: { data: expenseData, loading: expenseLoading },
     } = useUIState()
@@ -125,23 +138,17 @@ const ExpenseModal = ({
         [expenseData, participantsData]
     )
 
-    const formatDateToString = useCallback(
-        (dateStr: string) => {
-            if (!dateStr) return
+    const { formatDateToString } = useMiscellaneous()
 
-            const dateObj = new Date(dateStr)
-            dateInputUpdate(
-                `${dateObj.getFullYear()}-${dateObj.getMonth() < 10 ? "0" : ""
-                }${dateObj.getMonth()}-${dateObj.getDate()}`
-            )
-        },
-        [dateInputUpdate]
+    const formatDate = useCallback(
+        (dateStr: string) => formatDateToString(dateStr, dateInputUpdate),
+        [dateInputUpdate, formatDateToString]
     )
 
     const updateStates = useCallback(() => {
         expenseTitleInputUpdate(expenseData?.title)
         expenseAmountInputUpdate(expenseData?.amount)
-        formatDateToString(expenseData?.date ?? "")
+        formatDate(expenseData?.date ?? fareDate ?? "")
         setPaidBy(getParticipantOption(expenseData?.sharerId))
         setCategory({
             option: expenseData?.category,
@@ -149,10 +156,11 @@ const ExpenseModal = ({
         })
         setSplitBetweenList(updateShareBetween)
     }, [
+        fareDate,
         expenseData,
         expenseTitleInputUpdate,
         expenseAmountInputUpdate,
-        formatDateToString,
+        formatDate,
         getParticipantOption,
         updateShareBetween,
     ])
@@ -173,9 +181,17 @@ const ExpenseModal = ({
 
     useEffect(() => {
         handleFormReset()
+        if (fareDate) formatDate(fareDate ?? "")
         if (!expenseData?.id) return
         updateStates()
-    }, [participantsData, handleFormReset, expenseData, updateStates])
+    }, [
+        fareDate,
+        formatDate,
+        participantsData,
+        handleFormReset,
+        expenseData,
+        updateStates,
+    ])
 
     const formatToDropdownOptions = useMemo(
         () =>
@@ -200,7 +216,7 @@ const ExpenseModal = ({
         setSplitBetweenList(updatedSplitList)
     }
 
-    const handleExpenseDelete = () => {
+    const handleExpenseDelete = async () => {
         if (
             expenseLoading ||
             !expenseData?.id ||
@@ -209,11 +225,11 @@ const ExpenseModal = ({
             )
         )
             return
+        await deleteExpense(fareId, expenseData?.id)
         setShowModal(false)
-        deleteExpense(fareId, expenseData?.id)
     }
 
-    const handleFormSubmit = (e: React.SyntheticEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
         // Gather data
@@ -257,8 +273,9 @@ const ExpenseModal = ({
             date: new Date(date)?.toDateString(),
         }
 
-        if (expenseData?.id) updateExpense(fareId, expenseData?.id, expense)
-        else addExpense(fareId, expense)
+        if (expenseData?.id)
+            await updateExpense(fareId, expenseData?.id, expense)
+        else await addExpense(fareId, expense)
 
         setShowModal(false)
         handleFormReset()
@@ -355,7 +372,9 @@ const ExpenseModal = ({
                                             ? "cursor-not-allowed"
                                             : "cursor-pointer"
                                         }`}
-                                    label='Delete'
+                                    label={
+                                        expenseLoading ? <Loader /> : "Delete"
+                                    }
                                     callBack={handleExpenseDelete}
                                 />
                             ) : (
@@ -367,7 +386,15 @@ const ExpenseModal = ({
                             )}
                             <Button
                                 className='w-24 bg-green-500 hover:bg-green-400'
-                                label={expenseData?.id ? "Update" : "Save"}
+                                label={
+                                    expenseLoading ? (
+                                        <Loader />
+                                    ) : expenseData?.id ? (
+                                        "Update"
+                                    ) : (
+                                        "Save"
+                                    )
+                                }
                                 type='submit'
                             />
                         </div>

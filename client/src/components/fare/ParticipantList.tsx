@@ -5,6 +5,7 @@ import { IParticipant } from "./../../model/IParticipant"
 
 import Button from "../layout/Button"
 import FormInput from "../layout/FormInput"
+import Loader from "../layout/loader/Loader"
 
 const maxLimit = 20
 
@@ -32,7 +33,7 @@ const ParticipantList = () => {
     const { addFareParticipant, removeFareParticipant, setAlert } =
         useUIDispatch()
 
-    const handleParticipantAdd = (e: React.SyntheticEvent) => {
+    const handleParticipantAdd = async (e: React.FormEvent) => {
         e.preventDefault()
         if (loading || !fareId)
             return setAlert(`No Fare created to add participant!`)
@@ -53,18 +54,21 @@ const ParticipantList = () => {
             fareId,
         }
 
+        await addFareParticipant(participantData, fareId)
         participantInputUpdate()
-        return addFareParticipant(participantData, fareId)
     }
 
-    const handleParticipantRemove = (index: number, id: number | undefined) =>
+    const handleParticipantRemove = async (
+        index: number,
+        id: number | undefined
+    ) =>
         !loading &&
         id &&
         fareId &&
         window.confirm(
             `Remove ${participantsData[index]?.name} from the Fare?`
         ) &&
-        removeFareParticipant(id, fareId)
+        (await removeFareParticipant(id, fareId))
 
     if (!fareId) return <></>
 
@@ -82,10 +86,10 @@ const ParticipantList = () => {
                 />
                 <div className='flex space-x-3 items-end mb-8'>
                     <Button
-                        className='bg-blue-500 hover:bg-blue-400'
+                        className='w-16 bg-blue-500 hover:bg-blue-400'
                         type='submit'
                         disabled={loading}
-                        label='Add'
+                        label={loading ? <Loader /> : "Add"}
                     />
                 </div>
             </form>
@@ -99,9 +103,11 @@ const ParticipantList = () => {
                 <div className='flex flex-wrap w-full max-h-40 bg-dark rounded-lg p-3 gap-3 overflow-y-auto'>
                     {loading || !participantsData?.length ? (
                         <div className='px-2 h-8 flex justify-center items-center text-stone-400'>
-                            {loading
-                                ? "Loading ..."
-                                : `No Participants Added Yet!`}
+                            {loading ? (
+                                <Loader />
+                            ) : (
+                                `No Participants Added Yet!`
+                            )}
                         </div>
                     ) : (
                         participantsData?.map(

@@ -3,6 +3,6 @@ export interface IButton {
     height?: string
     className?: string
     callBack?: React.MouseEventHandler<HTMLButtonElement>
-    label?: string
+    label?: React.ReactNode
     disabled?: boolean
 }

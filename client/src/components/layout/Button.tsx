@@ -1,6 +1,13 @@
 import { IButton } from "../../model/IButton"
 
-const Button = ({ type = "button", className = "", callBack = () => { }, height = '12', label = 'Button', disabled = false }: IButton) => {
+const Button = ({
+    type = "button",
+    className = "",
+    callBack = () => { },
+    height = "12",
+    label = <span>Button</span>,
+    disabled = false,
+}: IButton) => {
     return (
         <button
             type={type}
