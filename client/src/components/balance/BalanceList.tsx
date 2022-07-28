@@ -133,6 +133,26 @@ const BalanceList = () => {
         [getMaximumPayer]
     )
 
+    const getAverageCost = useMemo(() => {
+        let averageTotal = 0,
+            averageLength = 0
+        participantsData?.forEach(
+            (participant: IParticipant, index: number) => {
+                if (!participantsBalance[index]) return
+                averageTotal +=
+                    getExpenseOfSharer(participant?.id) -
+                    participantsBalance[index]
+                averageLength += 1
+            }
+        )
+
+        if (!averageLength) return `0.00`
+
+        return (
+            Math.round((averageTotal / averageLength) * 100) / 100
+        )?.toFixed(2)
+    }, [participantsBalance, participantsData, getExpenseOfSharer])
+
     const toShowModal = useMemo(
         () =>
             expenses?.length &&
@@ -266,14 +286,7 @@ const BalanceList = () => {
             {toShowModal ? (
                 <div className='h-12 px-2 flex justify-between items-center border-t-2 border-white'>
                     <span className='text-light font-semibold px-2 text-sm md:text-xl'>
-                        Average Cost : ₹{" "}
-                        {(
-                            Math.round(
-                                (getExpenseOfSharer(participantsData[0]?.id) -
-                                    participantsBalance[0]) *
-                                10
-                            ) / 10
-                        ).toFixed(2)}
+                        Average Cost : ₹ {getAverageCost}
                     </span>
                     <Button
                         label='Balance Out'
