@@ -125,11 +125,9 @@ const BalanceList = () => {
 
     const getWidth = useCallback(
         (size: number) =>
-            Math.abs(
-                Math.round(
-                    ((size < 0 ? size * -1 : size) / getMaximumPayer) * 100
-                ) - 20
-            ),
+            Math.round(
+                ((size < 0 ? size * -1 : size) / getMaximumPayer) * 100
+            ) ?? 0,
         [getMaximumPayer]
     )
 
@@ -220,7 +218,7 @@ const BalanceList = () => {
                                         </td>
                                         {participantsBalance[i] < 0 ? (
                                             <>
-                                                <td className='w-4/12'>
+                                                <td className='w-4/12 border-r border-stone-400'>
                                                     <p className='flex space-x-3 items-center justify-end text-right'>
                                                         <span className='text-xs md:text-rg'>
                                                             {participantsBalance[
@@ -249,7 +247,7 @@ const BalanceList = () => {
                                         ) : (
                                             <>
                                                 <td />
-                                                <td className='w-4/12'>
+                                                <td className='w-4/12 border-l border-stone-400'>
                                                     <p className='flex space-x-3 items-center justify-start text-left'>
                                                         <span
                                                             className={`p-4 bg-green-500`}

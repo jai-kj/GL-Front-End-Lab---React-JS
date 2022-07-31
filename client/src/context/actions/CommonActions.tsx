@@ -4,7 +4,9 @@ import axios, { AxiosRequestConfig } from "axios"
 import { defaultState } from "../context"
 import { ActionTypes } from "../reducer"
 
-axios.defaults.baseURL = `https://fair-share-backend.herokuapp.com`
+// axios.defaults.baseURL = `https://fair-share-backend.herokuapp.com`
+axios.defaults.baseURL = `http://localhost:5000`
+
 
 const methodTypeAlerts: { [key: string]: string } = {
     POST: "Create Sucess!",

@@ -2,29 +2,204 @@
   "fares": [
     {
       "id": 1,
-      "title": "Mystery Rooms with Cousins",
-      "date": "Sat Mar 19 2022"
+      "title": "Monthly Expenses",
+      "date": "Fri Jul 01 2022"
     }
   ],
   "sharers": [
     {
       "id": 1,
-      "name": "Jai",
+      "name": "Rahul",
+      "fareId": 1
+    },
+    {
+      "id": 2,
+      "name": "Ramesh",
       "fareId": 1
     }
   ],
   "expenses": [
     {
-      "title": "D-Mart Snacks",
-      "amount": 150,
+      "title": "Bike Repair",
+      "amount": 1000,
       "fareId": 1,
       "sharerId": 1,
       "sharedBetween": [
-        1
+        1,
+        2
+      ],
+      "category": "Repairs & Charges",
+      "date": "Mon Jul 04 2022",
+      "id": 1
+    },
+    {
+      "title": "Movie Tickets",
+      "amount": 1044,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Movies & Theatre",
+      "date": "Tue Jul 05 2022",
+      "id": 2
+    },
+    {
+      "title": "Weekly Vegetables",
+      "amount": 366,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Groceries",
+      "date": "Fri Jul 01 2022",
+      "id": 3
+    },
+    {
+      "title": "Weekly Water Can",
+      "amount": 40,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
       ],
       "category": "Food & Drinks",
-      "date": "Sat Mar 19 2022",
-      "id": 1
+      "date": "Sat Jul 02 2022",
+      "id": 4
+    },
+    {
+      "title": "Weekly Groceries",
+      "amount": 192,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Groceries",
+      "date": "Sun Jul 03 2022",
+      "id": 5
+    },
+    {
+      "title": "Rice Bag",
+      "amount": 2000,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Food & Drinks",
+      "date": "Tue Jul 05 2022",
+      "id": 6
+    },
+    {
+      "title": "Internet Bills",
+      "amount": 1200,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Bills",
+      "date": "Wed Jul 06 2022",
+      "id": 7
+    },
+    {
+      "title": "Electricity Bill",
+      "amount": 724,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Bills",
+      "date": "Mon Jul 04 2022",
+      "id": 8
+    },
+    {
+      "title": "Weekly Water Can",
+      "amount": 40,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Food & Drinks",
+      "date": "Wed Jul 06 2022",
+      "id": 9
+    },
+    {
+      "title": "Weekly Water Can",
+      "amount": 40,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Food & Drinks",
+      "date": "Wed Jul 06 2022",
+      "id": 10
+    },
+    {
+      "title": "Plumbing Work",
+      "amount": 250,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Repairs & Charges",
+      "date": "Tue Jul 05 2022",
+      "id": 11
+    },
+    {
+      "title": "Tubelight",
+      "amount": 149,
+      "fareId": 1,
+      "sharerId": 1,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Repairs & Charges",
+      "date": "Fri Jul 01 2022",
+      "id": 12
+    },
+    {
+      "title": "LPG Cylinder",
+      "amount": 1000,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Fuel",
+      "date": "Tue Jul 05 2022",
+      "id": 13
+    },
+    {
+      "title": "House Rent",
+      "amount": 15000,
+      "fareId": 1,
+      "sharerId": 2,
+      "sharedBetween": [
+        1,
+        2
+      ],
+      "category": "Accomodation",
+      "date": "Fri Jul 01 2022",
+      "id": 14
     }
   ]
 }
